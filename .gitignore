@@ -1,0 +1,8 @@
+incoming
+node_modules
+dist
+.cache
+.ipynb_checkpoints
+.vscode
+pub
+*.swp
