@@ -1,8 +1,6 @@
-incoming
+.DS_Store
 node_modules
-dist
-.cache
-.ipynb_checkpoints
-.vscode
-pub
-*.swp
+public/bundle.*
+package-lock.json
+yarn.lock
+incoming
