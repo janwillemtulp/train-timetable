@@ -3,7 +3,7 @@
 		{#await promise}
 			<text>loading stations...</text>
 		{:then data}
-			<Legs legs={data.legs} {width} {height} x={data.x} y={data.y} />
+			<Legs legs={data.legs} trips={data.trips} {width} {height} x={data.x} y={data.y} />
 			<Stations stations={data.stations} {width} {height} x={data.x} y={data.y} />
 		{/await}
 	</svg>
@@ -18,9 +18,14 @@
 <script>
 	import { csv } from 'd3-fetch'
 	import { extent } from 'd3-array'
-  import { scaleLinear } from 'd3-scale'
+	import { scaleLinear } from 'd3-scale'
+	import store from './store.js'
 
 	export default {
+		store: () => store,
+		oncreate() {
+			console.log(this.store.get().elapsed)
+		},
 		data: () => ({
 			width: 1000,
 			height: 2000,
@@ -29,12 +34,14 @@
 				'./data/legs.csv',
 				'./data/data.csv'
 			].map(d => csv(d)))
-			.then(results => {
-				const stations = results[0].map(d => ({
-					...d,
-					lat: +d.lat,
-					lon: +d.lon
-				}))
+				.then(results => {
+					const stations = results[0]
+						.filter(d => !d['full-name'].toLowerCase().includes('grens'))
+						.map(d => ({
+							...d,
+							lat: +d.lat,
+							lon: +d.lon
+						}))
 
 				const legs = results[1].map(d => ({
 					...d,
@@ -45,12 +52,15 @@
 
 				const trips = results[2].map(d => ({
 					...d,
-					arrival: +d.arrival,
+					arrive: +d.arrive,
 					depart: +d.depart,
+					leg: legs.find((l, i) => i === +d['leg-index']),
 					'train-id': +d['train-id'],
 					'leg-index': +d['leg-index'],
 					'trip-id': +d['trip-id'],
 				}))
+
+				console.log(trips.filter(d => 768 >= d.depart && d.arrive >= 768))
 
 				const x = scaleLinear()
 					.domain(extent(stations, d => d.lon))

@@ -10,13 +10,13 @@
       x={x(station.lon)}
       y={y(station.lat)}
       dy="-5"
-      style="font-size: 8px; text-anchor: middle; fill: white; stroke: white; stroke-width: 1;"
+      style="font-size: 8px; text-anchor: middle; fill: black; stroke: black; stroke-width: 1;"
     >{station['full-name']}</text>
     <text
       x={x(station.lon)}
       y={y(station.lat)}
       dy="-5"
-      style="font-size: 8px; text-anchor: middle;"
+      style="font-size: 8px; text-anchor: middle; fill: white;"
     >{station['full-name']}</text> -->
   {/each}
 </g>

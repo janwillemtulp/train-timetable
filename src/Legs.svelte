@@ -1,15 +1,6 @@
 <g>
   {#each legs as leg, i}
-    <!-- <line
-      x1={x(leg.from.lon)}
-      y1={y(leg.from.lat)}
-      x2={x(leg.to.lon)}
-      y2={y(leg.to.lat)}
-      style="stroke: red;"
-    /> -->
-    <!-- {#if i < 100} -->
-      <Leg {leg} {x} {y} />
-    <!-- {/if} -->
+    <Leg {leg} {x} {y} active={$elapsed >= leg.depart && leg.arrive >= $elapsed} />
   {/each}
 </g>
 
@@ -18,6 +9,14 @@
 
   export default {
     namespace: 'svg',
+    data: () => ({
+      elapsed: 899
+    }),
+    computed: {
+      filteredLegs: ({ legs, trips, elapsed }) => trips
+        .filter(d => elapsed >= d.depart && d.arrive >= elapsed)
+        .map(d => d.leg)
+		},
     components: {
       Leg: './Leg.svelte'
     }
