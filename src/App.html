@@ -1,10 +1,12 @@
 <div>
-	<svg {width} {height}>
+	<svg {width} {height} ref:svg>
 		{#await promise}
 			<text>loading stations...</text>
 		{:then data}
-			<Legs legs={data.legs} trips={data.trips} {width} {height} x={data.x} y={data.y} />
+			<text x="200" y="200" style="fill: white;">{Math.round(Math.floor($elapsed / 60))}:{Math.round($elapsed % 60) < 10 ? '0' : ''}{Math.round($elapsed % 60)}</text>
+			<Legs legs={data.legs} trips={data.trips} {width} {height} x={data.x} y={data.y} elapsed={$elapsed} />
 			<Stations stations={data.stations} {width} {height} x={data.x} y={data.y} />
+			<!-- <Trips trips={data.trips} {width} {height} x={data.x} y={data.y} elapsed={$elapsed} /> -->
 		{/await}
 	</svg>
 </div>
@@ -20,11 +22,16 @@
 	import { extent } from 'd3-array'
 	import { scaleLinear } from 'd3-scale'
 	import store from './store.js'
+	import { select, mouse} from 'd3-selection'
 
 	export default {
 		store: () => store,
-		oncreate() {
-			console.log(this.store.get().elapsed)
+		onupdate() {
+			select('svg')
+				.on('mousemove', () => this.store.set({
+					elapsed: 285 + (mouse(this.refs.svg)[0] / 1000) * (720 - 285)
+				}))
+
 		},
 		data: () => ({
 			width: 1000,
@@ -46,6 +53,7 @@
 				const legs = results[1].map(d => ({
 					...d,
 					'tarif-unit': +d['tarif-unit'],
+					ix: +d.ix,
 					from: stations.find(s => s['short-name'] === d.from),
 					to: stations.find(s => s['short-name'] === d.to)
 				}))
@@ -59,7 +67,10 @@
 					'leg-index': +d['leg-index'],
 					'trip-id': +d['trip-id'],
 				}))
-
+				// .filter(d => [1400, 14000, 5700, 7400, 6000, 5600, 2900, 6900, 3000, 8800, 3100, 11700, 2800, 6500, 5500, 3500, 1700, 7300, 2000, 500, 600, 4900, 14900, 3900, 800, 28300, 21400, 0, 23400, 22400].includes(100 * Math.floor(d['train-id'] / 100)))
+				// .filter(d => ['ut', 'asd', 'rtd', 'zl', 'zp'].includes(d.leg.from['short-name']) || ['ut', 'asd', 'rtd', 'zl', 'zp'].includes(d.leg.to['short-name']))
+				// .filter(d => 100 * Math.floor(d['train-id'] / 100) === 3900)
+				console.log([...new Set(trips.filter(d => d.leg.from['short-name'] === 'ut' || d.leg.to['short-name'] === 'ut').map(d => 100 * Math.floor(d['train-id'] / 100)))])
 				console.log(trips.filter(d => 768 >= d.depart && d.arrive >= 768))
 
 				const x = scaleLinear()
@@ -94,7 +105,8 @@
 		}),
 		components: {
 			Stations: './Stations.svelte',
-			Legs: './Legs.svelte'
+			Legs: './Legs.svelte',
+			Trips: './Trips.svelte'
 		}
 	}
 </script>
