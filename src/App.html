@@ -1,7 +1,89 @@
-<h1>Hello {name}!</h1>
+<div>
+	<svg {width} {height}>
+		{#await promise}
+			<text>loading stations...</text>
+		{:then data}
+			<Stations stations={data.stations} {width} {height} x={data.x} y={data.y} />
+			<Legs legs={data.legs} {width} {height} x={data.x} y={data.y} />
+		{/await}
+	</svg>
+</div>
 
 <style>
 	h1 {
 		color: purple;
 	}
 </style>
+
+<script>
+	import { csv } from 'd3-fetch'
+	import { extent } from 'd3-array'
+  import { scaleLinear } from 'd3-scale'
+
+	export default {
+		data: () => ({
+			width: 1000,
+			height: 2000,
+			promise: Promise.all([
+				'./data/stations.csv',
+				'./data/legs.csv',
+				'./data/data.csv'
+			].map(d => csv(d)))
+			.then(results => {
+				const stations = results[0].map(d => ({
+					...d,
+					lat: +d.lat,
+					lon: +d.lon
+				}))
+
+				const legs = results[1].map(d => ({
+					...d,
+					'tarif-unit': +d['tarif-unit'],
+					from: stations.find(s => s['short-name'] === d.from),
+					to: stations.find(s => s['short-name'] === d.to)
+				}))
+
+				const trips = results[2].map(d => ({
+					...d,
+					arrival: +d.arrival,
+					depart: +d.depart,
+					'leg-index': +d['leg-index'],
+					'trip-id': +d['trip-index'],
+				}))
+
+				const x = scaleLinear()
+					.domain(extent(stations, d => d.lon))
+					.range([0, 1000])
+
+				const y = scaleLinear()
+					.domain(extent(stations, d => d.lat))
+					.range([2000, 0])
+
+				console.log(stations, legs, trips)
+
+				return {
+					stations,
+					legs,
+					trips,
+					x,
+					y
+				}
+			})
+			// promise: new Promise(resolve => {
+			// 	csv('./data/stations.csv', row => ({
+			// 		...row,
+			// 		lat: +row.lat,
+			// 		lon: +row.lon
+			// 	}))
+			// 		.then(data => {
+			// 			console.log(data)
+			// 			resolve(data)
+			// 		})
+			// }),
+		}),
+		components: {
+			Stations: './Stations.svelte',
+			Legs: './Legs.svelte'
+		}
+	}
+</script>
