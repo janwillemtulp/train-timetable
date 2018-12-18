@@ -3,8 +3,8 @@
 		{#await promise}
 			<text>loading stations...</text>
 		{:then data}
-			<Stations stations={data.stations} {width} {height} x={data.x} y={data.y} />
 			<Legs legs={data.legs} {width} {height} x={data.x} y={data.y} />
+			<Stations stations={data.stations} {width} {height} x={data.x} y={data.y} />
 		{/await}
 	</svg>
 </div>
@@ -47,8 +47,9 @@
 					...d,
 					arrival: +d.arrival,
 					depart: +d.depart,
+					'train-id': +d['train-id'],
 					'leg-index': +d['leg-index'],
-					'trip-id': +d['trip-index'],
+					'trip-id': +d['trip-id'],
 				}))
 
 				const x = scaleLinear()

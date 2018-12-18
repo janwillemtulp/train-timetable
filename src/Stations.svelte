@@ -4,8 +4,20 @@
       r="2"
       cx={x(station.lon)}
       cy={y(station.lat)}
-      style="fill: black;"
+      style="fill: white; stroke: black; stroke-width: 2;"
     />
+    <!-- <text
+      x={x(station.lon)}
+      y={y(station.lat)}
+      dy="-5"
+      style="font-size: 8px; text-anchor: middle; fill: white; stroke: white; stroke-width: 1;"
+    >{station['full-name']}</text>
+    <text
+      x={x(station.lon)}
+      y={y(station.lat)}
+      dy="-5"
+      style="font-size: 8px; text-anchor: middle;"
+    >{station['full-name']}</text> -->
   {/each}
 </g>
 

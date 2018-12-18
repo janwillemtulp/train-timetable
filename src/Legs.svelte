@@ -1,5 +1,5 @@
 <g>
-  {#each legs as leg}
+  {#each legs as leg, i}
     <!-- <line
       x1={x(leg.from.lon)}
       y1={y(leg.from.lat)}
@@ -7,7 +7,9 @@
       y2={y(leg.to.lat)}
       style="stroke: red;"
     /> -->
-    <Leg {leg} {x} {y} />
+    <!-- {#if i < 100} -->
+      <Leg {leg} {x} {y} />
+    <!-- {/if} -->
   {/each}
 </g>
 
