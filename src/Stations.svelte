@@ -5,6 +5,7 @@
       cx={x(station.lon)}
       cy={y(station.lat)}
       style="fill: white; stroke: black; stroke-width: 2;"
+      on:mouseover="console.log(station)"
     />
     <!-- <text
       x={x(station.lon)}
