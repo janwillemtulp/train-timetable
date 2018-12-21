@@ -16,6 +16,9 @@
 
   export default {
     namespace: 'svg',
+    // onstate({ changed, current, previous}) {
+    //   // console.log(this.store.get().filteredTrains)
+    // },
     computed: {
       d: ({ leg, x, y }) => {
         const x0 = x(leg.from.lon)

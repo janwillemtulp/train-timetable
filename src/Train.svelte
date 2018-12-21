@@ -6,25 +6,6 @@
     y2={back.y}
     style="stroke: white; stroke-width: 2;"
   />
-  <!-- <line
-    x1={front2.x}
-    y1={front2.y}
-    x2={back2.x}
-    y2={back2.y}
-    style="stroke: white; stroke-width: 2;"
-  /> -->
-  <!-- <text
-    x={front.x}
-    y={front.y}
-    dy="-3"
-    style="fill: white; font-size: 8px; text-anchor: middle;"
-  >{leg.trip.leg.to['full-name']}</text> -->
-  <!-- <text
-    x={front.x}
-    y={front.y}
-    dy="7"
-    style="fill: white; font-size: 8px; text-anchor: middle;"
-  >{leg.trip['trip-id']}</text> -->
 </g>
 
 <script>
@@ -36,42 +17,24 @@
   export default {
     namespace: 'svg',
     computed: {
-      front: ({ leg, elapsed }) => {
-        const path = select(`#leg-${leg.ix}`).node()
+      front: ({ trip, elapsed }) => {
+        const path = select(`#leg-${trip.leg.ix}`).node()
 
-        if (path && leg.trip) {
-          return path.getPointAtLength(((elapsed - leg.trip.depart + 1) / (leg.trip.arrive - leg.trip.depart)) * path.getTotalLength())
+        if (path && trip) {
+          return path.getPointAtLength(((elapsed - trip.depart + 1) / (trip.arrive - trip.depart)) * path.getTotalLength())
         } else {
           return 0
         }
       },
-      back: ({ leg, elapsed }) => {
-        const path = select(`#leg-${leg.ix}`).node()
+      back: ({ trip, elapsed }) => {
+        const path = select(`#leg-${trip.leg.ix}`).node()
 
-        if (path && leg.trip) {
-          return path.getPointAtLength(((elapsed - leg.trip.depart + 1) / (leg.trip.arrive - leg.trip.depart)) * path.getTotalLength() - 10)
+        if (path && trip) {
+          return path.getPointAtLength(((elapsed - trip.depart + 1) / (trip.arrive - trip.depart)) * path.getTotalLength() - 10)
         } else {
           return 0
         }
       },
-      // front2: ({ leg, elapsed }) => {
-      //   const path = select(`#leg-${leg.ix}`).node()
-
-      //   if (path && leg.trip) {
-      //     return path.getPointAtLength(((elapsed - leg.trip.depart + 1) / (leg.trip.arrive - leg.trip.depart)) * path.getTotalLength() - 12)
-      //   } else {
-      //     return 0
-      //   }
-      // },
-      // back2: ({ leg, elapsed }) => {
-      //   const path = select(`#leg-${leg.ix}`).node()
-
-      //   if (path && leg.trip) {
-      //     return path.getPointAtLength(((elapsed - leg.trip.depart + 1) / (leg.trip.arrive - leg.trip.depart)) * path.getTotalLength() - 22)
-      //   } else {
-      //     return 0
-      //   }
-      // }
     }
   }
 </script>

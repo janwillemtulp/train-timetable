@@ -4,7 +4,7 @@
 			<text>loading stations...</text>
 		{:then data}
 			<text x="200" y="200" style="fill: white;">{Math.round(Math.floor($elapsed / 60))}:{Math.round($elapsed % 60) < 10 ? '0' : ''}{Math.round($elapsed % 60)}</text>
-			<Legs legs={data.legs} trips={data.trips} {width} {height} x={data.x} y={data.y} elapsed={$elapsed} />
+			<Legs {width} {height} x={data.x} y={data.y} elapsed={$elapsed} />
 			<Stations stations={data.stations} {width} {height} x={data.x} y={data.y} />
 			<!-- <Trips trips={data.trips} {width} {height} x={data.x} y={data.y} elapsed={$elapsed} /> -->
 		{/await}
@@ -68,11 +68,12 @@
 					'leg-index': +d['leg-index'],
 					'trip-id': +d['trip-id'],
 				}))
-				.filter(d => [1400, 14000, 5700, 7400, 6000, 5600, 2900, 6900, 3000, 8800, 3100, 11700, 2800, 6500, 5500, 3500, 1700, 7300, 2000, 500, 600, 4900, 14900, 3900, 800, 28300, 2100, 900, 1800, 7000, 3200, 4000, 8900, 3600, 6100, 11800, 7500, 5000, 700, 5800, 6600, 15000, 21400, 0, 23400, 22400].includes(d['serie']))
+				
+				// .filter(d => [1400, 14000, 5700, 7400, 6000, 5600, 2900, 6900, 3000, 8800, 3100, 11700, 2800, 6500, 5500, 3500, 1700, 7300, 2000, 500, 600, 4900, 14900, 3900, 800, 28300, 2100, 900, 1800, 7000, 3200, 4000, 8900, 3600, 6100, 11800, 7500, 5000, 700, 5800, 6600, 15000, 21400, 0, 23400, 22400].includes(d['serie']))
 				// .filter(d => ['ut', 'asd', 'rtd', 'zl', 'zp'].includes(d.leg.from['short-name']) || ['ut', 'asd', 'rtd', 'zl', 'zp'].includes(d.leg.to['short-name']))
 				// .filter(d => 100 * Math.floor(d['train-id'] / 100) === 3900)
-				console.log([...new Set(trips.filter(d => ['ut'].includes(d.leg.from['short-name']) || ['ut'].includes(d.leg.to['short-name'])).map(d => d['serie']))])
-				console.log(trips.filter(d => 768 >= d.depart && d.arrive >= 768))
+				// console.log([...new Set(trips.filter(d => ['ut'].includes(d.leg.from['short-name']) || ['ut'].includes(d.leg.to['short-name'])).map(d => d['serie']))])
+				// console.log(trips.filter(d => 768 >= d.depart && d.arrive >= 768))
 
 				const x = scaleLinear()
 					.domain(extent(stations, d => d.lon))
@@ -89,6 +90,7 @@
 					legs,
 					trips
 				})
+
 
 				console.log('STORE', store.get())
 

@@ -1,13 +1,16 @@
 <g>
-  {#each legs as leg, i}
-    <Leg {leg} {x} {y} active={false} elapsed={$elapsed} />
+  {#each $legs as leg, i}
+    <Leg {leg} {x} {y} active={$activeLegIndices.includes(leg.ix)} />
   {/each}
-  {#each $filteredLegs as leg, i}
-    <Leg {leg} {x} {y} active={true} elapsed={$elapsed} />
+  <!-- {#each $filteredLegs as leg, i}
+    <Leg {leg} {x} {y} active={true} />
   {/each}
-  {#each $filteredLegs as leg, i}
+  {#each $filteredTrips as trip}
+    <Train {trip} elapsed={$elapsed} />
+  {/each} -->
+  <!-- {#each $filteredLegs as leg, i}
     <Train {leg} elapsed={$elapsed} />
-  {/each}
+  {/each} -->
 </g>
 
 <script>
