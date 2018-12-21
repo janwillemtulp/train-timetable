@@ -37,7 +37,7 @@ store.compute(
 )
 
 store.compute(
-  'activeLegs2',
+  'activeLegs',
   ['activeTrips', 'elapsed'],
   activeTrips => Array.from(group(activeTrips, d => d.leg.ix).values()).map(d => ({
     leg: d[0].leg,
