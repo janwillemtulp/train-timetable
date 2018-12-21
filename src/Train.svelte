@@ -1,11 +1,17 @@
 <g>
+  <!-- <text x="200" y="200" style="fill: white;">{path}</text> -->
   <line
     x1={front.x}
     y1={front.y}
     x2={back.x}
     y2={back.y}
-    style="stroke: white; stroke-width: 2;"
+    style="stroke: white; stroke-width: 3;"
   />
+  <!-- <text
+    x={front.x}
+    y={front.y}
+    style="font-size: 8px; fill: white; text-anchor: middle ;"
+  >{trip.leg.to['full-name']}</text> -->
 </g>
 
 <script>
@@ -16,8 +22,8 @@
   export default {
     namespace: 'svg',
     computed: {
-      front: ({ trip, elapsed }) => {
-        const path = select(`#leg-${trip.leg.ix}`).node()
+      front: ({ trip, path, elapsed }) => {
+        // const path = select(`#leg-${trip.leg.ix}`).node()
 
         if (path && trip) {
           return path.getPointAtLength(((elapsed - trip.depart + 1) / (trip.arrive - trip.depart)) * path.getTotalLength())
@@ -25,8 +31,8 @@
           return 0
         }
       },
-      back: ({ trip, elapsed }) => {
-        const path = select(`#leg-${trip.leg.ix}`).node()
+      back: ({ trip, path, elapsed }) => {
+        // const path = select(`#leg-${trip.leg.ix}`).node()
 
         if (path && trip) {
           return path.getPointAtLength(((elapsed - trip.depart + 1) / (trip.arrive - trip.depart)) * path.getTotalLength() - 10)

@@ -1,7 +1,13 @@
 <g>
-  {#each $legs as leg, i}
+  <!-- {#each $legs as leg, i}
     <Leg {leg} {x} {y} elapsed={$elapsed} active={$activeLegIndices.includes(leg.ix)} />
+  {/each} -->
+  {#each $legs as leg, i}
+    <Leg {leg} />
   {/each}
+  {#each $activeLegs as activeLeg, i}
+    <ActiveLeg {activeLeg} active={true} />
+  {/each}}
   <!-- {#each $filteredLegs as leg, i}
     <Leg {leg} {x} {y} active={true} />
   {/each}
@@ -20,7 +26,8 @@
     namespace: 'svg',
     components: {
       Leg: './Leg.svelte',
-      Train: './Train.svelte'
+      Train: './Train.svelte',
+      ActiveLeg: './ActiveLeg.svelte'
     }
   }
 </script>

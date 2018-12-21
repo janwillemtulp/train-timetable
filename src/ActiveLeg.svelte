@@ -1,12 +1,16 @@
 <g>
   <path
-    d={leg.pathString}
-    style="fill: none; stroke: #333; stroke-width: 0.5;"
+    ref:path
+    d={activeLeg.leg.pathString}
+    style="fill: none; stroke: orange; stroke-width: 0.5"
   />
   <path
-    d={leg.pathString}
-    style="fill: none; stroke: #333; stroke-dasharray: 1 1.5; stroke-width: 3;"
+    d={activeLeg.leg.pathString}
+    style="fill: none; stroke: orange; stroke-dasharray: 1 1.5; stroke-width: 3;"
   />
+  {#each activeLeg.trips as trip}
+    <Train {trip} elapsed={$elapsed} {path} />
+  {/each}
 </g>
 
 <script>
@@ -14,6 +18,15 @@
 
   export default {
     namespace: 'svg',
+    oncreate() {
+      this.set({ path: this.refs.path })
+    },
+    data: () => ({
+      path: undefined
+    }),
+    components: {
+      Train: './Train.svelte'
+    }
     // onstate({ changed, current, previous}) {
     //   // console.log(this.store.get().filteredTrains)
     // },
