@@ -9,7 +9,6 @@
 </g>
 
 <script>
-  import { line, curveCardinal } from 'd3-shape'
   import { select } from 'd3-selection'
 
   const dist = (x0, y0, x1, y1) => Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2))

@@ -7,7 +7,7 @@
   />
   <path
     d={d}
-    style="fill: none; stroke: #333; stroke-dasharray: 1 1.5; stroke-width: 2;"
+    style="fill: none; stroke: #333; stroke-dasharray: 1 1.5; stroke-width: 3;"
   />
 </g>
 

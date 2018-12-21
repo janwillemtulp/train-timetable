@@ -1,6 +1,6 @@
 <g>
   {#each $legs as leg, i}
-    <Leg {leg} {x} {y} active={$activeLegIndices.includes(leg.ix)} />
+    <Leg {leg} {x} {y} elapsed={$elapsed} active={$activeLegIndices.includes(leg.ix)} />
   {/each}
   <!-- {#each $filteredLegs as leg, i}
     <Leg {leg} {x} {y} active={true} />

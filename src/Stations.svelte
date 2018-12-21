@@ -6,6 +6,7 @@
       cy={y(station.lat)}
       style="fill: white; stroke: black; stroke-width: 2;"
       on:mouseover="console.log(station)"
+      on:click="setSelectedStation(station)"
     />
     <!-- <text
       x={x(station.lon)}
@@ -26,6 +27,11 @@
   
 
   export default {
-    namespace: 'svg'
+    namespace: 'svg',
+    methods: {
+      setSelectedStation(station) {
+        this.store.set({ selectedStations: [station['short-name']] })
+      }
+    }
   }
 </script>
