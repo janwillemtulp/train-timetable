@@ -5,7 +5,7 @@
     y1={front.y}
     x2={back.x}
     y2={back.y}
-    style="stroke: white; stroke-width: 3;"
+    style="stroke: yellow; stroke-width: 3; stroke-dasharray: 5 1"
   />
   <!-- <text
     x={front.x}

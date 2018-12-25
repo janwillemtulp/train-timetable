@@ -31,8 +31,8 @@
 		const angle = (Math.PI * 0.5) + Math.atan2(to[1] - from[1], to[0] - from[0])
 		const dst = dist(from, to)
 
-		const cx = ((from[0] + to[0]) / 2) + (Math.cos(angle) * dst * 0.3)
-		const cy = ((from[1] + to[1]) / 2) + (Math.sin(angle) * dst * 0.3)
+		const cx = ((from[0] + to[0]) / 2) + (Math.cos(angle) * dst * 0.15)
+		const cy = ((from[1] + to[1]) / 2) + (Math.sin(angle) * dst * 0.15)
 
 		return `M${from[0]} ${from[1]} Q ${cx} ${cy} ${to[0]} ${to[1]}`
 	}
@@ -40,11 +40,33 @@
 	export default {
 		store: () => store,
 		oncreate() {
-			const animate = function() {
-				setInterval(function() {
-					store.set({ elapsed: (store.get().elapsed + 0.5) % 1440 })
-				}, 50)
-			}()
+			
+			// from: https://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
+			var stop = false;
+			var frameCount = 0;
+			var fps, fpsInterval, startTime, now, then, elapsed;
+
+			function startAnimating(fps) {
+					fpsInterval = 1000 / fps
+					then = Date.now()
+					startTime = then
+					animate()
+			}
+
+			function animate() {
+				requestAnimationFrame(animate)
+
+				now = Date.now()
+				elapsed = now - then
+
+				if (elapsed > fpsInterval) {
+						then = now - (elapsed % fpsInterval)
+
+						store.set({ elapsed: (store.get().elapsed + 1) % 1440 })
+				}
+			}
+
+			startAnimating(20)
 		},
 		onupdate() {
 			// select('svg')

@@ -6,7 +6,7 @@ const store = new Store({
   stations: [],
   legs: [],
   trips: [],
-  selectedStations: []
+  selectedStations: ['zl']
 })
 
 store.compute(
@@ -28,6 +28,12 @@ store.compute(
   'filteredTrips', // trips
   ['trips', 'filteredTrains'],
  (trips, filteredTrains) => [...new Set(trips.filter(d => filteredTrains.includes(d['train-id'])))]
+)
+
+store.compute(
+  'filteredLegs',
+  ['filteredTrips'],
+  filteredTrips => filteredTrips.map(d => d.leg)
 )
 
 store.compute(

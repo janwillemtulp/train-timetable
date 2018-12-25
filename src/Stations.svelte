@@ -1,7 +1,7 @@
 <g>
   {#each stations as station}
     <circle
-      r="2"
+      r={$selectedStations.includes(station['short-name']) ? 4 : 2}
       cx={x(station.lon)}
       cy={y(station.lat)}
       style="fill: white; stroke: black; stroke-width: 2;"
@@ -30,7 +30,12 @@
     namespace: 'svg',
     methods: {
       setSelectedStation(station) {
-        this.store.set({ selectedStations: [station['short-name']] })
+        // this.store.set({ selectedStations: [station['short-name']] })
+        const old = this.store.get().selectedStations
+
+        this.store.set({
+          selectedStations: old.includes(station['short-name']) ? old.filter(d => d !== station['short-name']) : old.concat([station['short-name']])
+        })
       }
     }
   }

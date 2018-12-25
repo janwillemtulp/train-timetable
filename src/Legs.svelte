@@ -2,7 +2,7 @@
   <!-- {#each $legs as leg, i}
     <Leg {leg} {x} {y} elapsed={$elapsed} active={$activeLegIndices.includes(leg.ix)} />
   {/each} -->
-  {#each $legs as leg, i}
+  {#each $legs as leg, i (leg.ix)}
     <Leg {leg} />
   {/each}
   {#each $activeLegs as activeLeg, i}

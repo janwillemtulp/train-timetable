@@ -2,11 +2,11 @@
   <path
     ref:path
     d={activeLeg.leg.pathString}
-    style="fill: none; stroke: orange; stroke-width: 0.5"
+    style="fill: none; stroke: steelblue; stroke-width: 0.5"
   />
   <path
     d={activeLeg.leg.pathString}
-    style="fill: none; stroke: orange; stroke-dasharray: 1 1.5; stroke-width: 3;"
+    style="fill: none; stroke: steelblue; stroke-dasharray: 1 1.5; stroke-width: 3;"
   />
   {#each activeLeg.trips as trip}
     <Train {trip} elapsed={$elapsed} {path} />
