@@ -1,10 +1,11 @@
 <g>
+  <!-- r={$selectedStations.includes(station['short-name']) ? 4 : 2} -->
   {#each stations as station}
     <circle
-      r={$selectedStations.includes(station['short-name']) ? 4 : 2}
+      r={station.type.toLowerCase().indexOf('megastation') > -1 ? 4 : station.type.toLowerCase().indexOf('knooppunt') > -1 ? 3 : 2}
       cx={x(station.lon)}
       cy={y(station.lat)}
-      style="fill: white; stroke: black; stroke-width: 2;"
+      style="fill: {$selectedStations.includes(station['short-name']) ? 'red' : 'white'}; stroke: {$selectedStations.includes(station['short-name']) ? 'orange' : 'black'}; stroke-width: 2;"
       on:mouseover="console.log(station)"
       on:click="setSelectedStation(station)"
     />

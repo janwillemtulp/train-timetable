@@ -1,14 +1,15 @@
 <div>
-	<svg {width} {height} ref:svg>
-		{#await promise}
-			<text>loading stations...</text>
-		{:then data}
+	{#await promise}
+		<p style="color: white;">loading...</p>
+	{:then data}
+		<!-- <svg {width} {height} ref:svg>
 			<text x="200" y="200" style="fill: white;">{Math.round(Math.floor($elapsed / 60))}:{Math.round($elapsed % 60) < 10 ? '0' : ''}{Math.round($elapsed % 60)}</text>
 			<Legs {width} {height} x={data.x} y={data.y} elapsed={$elapsed} />
-			<Stations stations={data.stations} {width} {height} x={data.x} y={data.y} />
+			<Stations stations={data.stations} {width} {height} x={data.x} y={data.y} /> -->
 			<!-- <Trips trips={data.trips} {width} {height} x={data.x} y={data.y} elapsed={$elapsed} /> -->
-		{/await}
-	</svg>
+		<!-- </svg> -->
+		<Canvas {data} />
+	{/await}
 </div>
 
 <style>
@@ -66,7 +67,7 @@
 				}
 			}
 
-			startAnimating(20)
+			// startAnimating(20)
 		},
 		onupdate() {
 			// select('svg')
@@ -91,17 +92,20 @@
 							lon: +d.lon
 						}))
 
+					console.log([...new Set(stations.map(d => d.type))])
+
 					const x = scaleLinear()
 						.domain(extent(stations, d => d.lon))
 						.range([10, window.innerHeight - 10])
 
 					const y = scaleLinear()
 						.domain(extent(stations, d => d.lat))
-						.range([2 * window.innerHeight - 10, 10])
+						.range([window.innerHeight - 10, 10])
 
 					const legs = results[1].map(d => ({
 						...d,
 						'tarif-unit': +d['tarif-unit'],
+						dist: +d.dist,
 						ix: +d.ix,
 						from: stations.find(s => s['short-name'] === d.from),
 						to: stations.find(s => s['short-name'] === d.to),
@@ -162,7 +166,8 @@
 		components: {
 			Stations: './Stations.svelte',
 			Legs: './Legs.svelte',
-			Trips: './Trips.svelte'
+			Trips: './Trips.svelte',
+			Canvas: './Canvas.svelte'
 		}
 	}
 </script>

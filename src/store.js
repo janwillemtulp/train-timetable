@@ -2,7 +2,7 @@ import { Store } from 'svelte/store.js'
 import { group } from 'd3-array'
 
 const store = new Store({
-  elapsed: 370,
+  elapsed: 870,
   stations: [],
   legs: [],
   trips: [],
