@@ -23,14 +23,14 @@
       ctx.lineWidth = 1
       ctx.strokeStyle = '#333'
 
-      // this.store.get().legs.forEach(leg => {
-      //   const p = new Path2D(leg.pathString)
-      //   ctx.setLineDash([])
-      //   ctx.stroke(p)
+      this.store.get().legs.forEach(leg => {
+        const p = new Path2D(leg.pathString)
+        ctx.setLineDash([])
+        ctx.stroke(p)
         
-      //   ctx.setLineDash([1, 1.5])
-      //   ctx.stroke(p)
-      // })
+        ctx.setLineDash([1, 1.5])
+        ctx.stroke(p)
+      })
 
       ctx.lineWidth = 3
       ctx.strokeStyle = '#770'
