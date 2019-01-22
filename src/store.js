@@ -6,7 +6,10 @@ const store = new Store({
   stations: [],
   legs: [],
   trips: [],
-  selectedStations: []
+  selectedStations: [],
+  x: undefined,
+  y: undefined,
+  damping: 0.7
 })
 
 store.compute(
