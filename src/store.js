@@ -6,7 +6,7 @@ const store = new Store({
   stations: [],
   legs: [],
   trips: [],
-  selectedStations: ['zl']
+  selectedStations: []
 })
 
 store.compute(
