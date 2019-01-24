@@ -25,6 +25,7 @@
 	import store from './store.js'
 	import { select, mouse} from 'd3-selection'
 	import Victor from 'victor'
+	import Station from './domain/Station'
 
 	const dist = (from, to) => Math.sqrt(Math.pow(to[0] - from[0], 2) + Math.pow(to[1] - from[1], 2))
 
@@ -94,18 +95,13 @@
 
 					const stations = results[0]
 						.filter(d => !d['full-name'].toLowerCase().includes('grens'))
-						.map(d => ({
-							...d,
-							x: x(+d.lon),
-							y: y(+d.lat),
-							v: new Victor(x(+d.lon), y(+d.lat))
-						}))
+						.map(d => new Station(d, x, y))
 
 					console.log([...new Set(stations.map(d => d.type))])
 
 					const legs = results[1].map(d => {
-						const from = stations.find(s => s['short-name'] === d.from)
-						const to = stations.find(s => s['short-name'] === d.to)
+						const from = stations.find(s => s.shortName === d.from)
+						const to = stations.find(s => s.shortName === d.to)
 
 						return {
 							...d,
