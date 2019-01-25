@@ -40,10 +40,10 @@ export default class Station {
   }
 
   drawOffsetLine(ctx) {
-    ctx.strokeStyle = `hsla(0, 100%, ${20 + station.o.distance(station.v)}%, 1)`
+    // ctx.strokeStyle = `hsla(0, 100%, ${20 + this.o.distance(this.v)}%, 1)`
     // ctx.strokeStyle = 'rgba(255, 255, 255, 1)'
     // ctx.setLineDash([1, 1.5])
-    // ctx.strokeStyle = `hsla(${this.v.clone().subtract(this.o).angleDeg(this.v)}, 50%, 50%, 1)`
+    ctx.strokeStyle = `hsla(${this.v.clone().subtract(this.o).angleDeg(this.v)}, 50%, 50%, 1)`
     // ctx.setLineDash([])
 
     ctx.beginPath() // does not go right yet. stations are not updated

@@ -12,4 +12,10 @@ const store = new Store({
   y: undefined,
 })
 
+// store.compute(
+//   'activeLegs',
+//   ['trips'],
+//   trips => trips.filter(d => d.active)
+// )
+
 export default store

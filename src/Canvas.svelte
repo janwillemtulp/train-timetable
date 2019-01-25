@@ -43,6 +43,7 @@
           legs.forEach(leg => {
             // leg.drawStraight(ctx)
             leg.drawCurved(ctx)
+            leg.drawTrains(ctx)
           })
 
           ctx.fillStyle = '#fff'

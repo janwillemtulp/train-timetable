@@ -8,8 +8,6 @@ export default class Trip {
     this.legIndex = +d['leg-index']
     this.tripId = +d['trip-id']
     this.active = false
-
-    //leg: legs.find((l, i) => i === +d['leg-index']),
   }
 
   get duration() {

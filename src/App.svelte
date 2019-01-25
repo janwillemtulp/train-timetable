@@ -65,7 +65,7 @@
 				if (elapsed > fpsInterval) {
 						then = now - (elapsed % fpsInterval)
 
-						store.set({ elapsed: (store.get().elapsed + 1) % 1440 })
+						store.set({ elapsed: (store.get().elapsed + 0.5) % 1440 })
 				}
 			}
 
@@ -100,12 +100,13 @@
 
 						return new Leg(d, from, to, store)
 					})
-					console.log(results[1])
+
 					const trips = []
 					results[2].forEach(d => {
+						const leg = legs[+d['leg-index']]
 						const trip = new Trip(d)
 						
-						legs[+d['leg-index']].trips.push(trip)
+						leg.trips.push(trip)
 						trips.push(trip)
 					})
 				
@@ -118,7 +119,6 @@
 						x,
 						y
 					})
-
 
 					console.log('STORE', store.get())
 

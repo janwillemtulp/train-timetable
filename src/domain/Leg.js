@@ -8,7 +8,9 @@ export default class Leg {
     this.angle = Math.atan2(this.to.y - this.from.y, this.to.x - this.from.x)
     this.trips = []
     this.activeTrips = this.trips
-    // this.store = store
+    this.path = ''
+    this.props = undefined
+    this.store = store
 
     store.on('state', ({ changed, current, previous }) => {
       if (changed.elapsed) {
@@ -20,6 +22,9 @@ export default class Leg {
         if (this.active) {
           this.from.v.mix(this.to.v, Math.log(1 + 0.001 * this.trips.reduce((acc, cur) => acc + (this.dist / cur.duration), 0)))
         }
+
+        this.path = this. createPathString()
+        this.props = spp.svgPathProperties(this.path)
       }
     })
   }
@@ -40,8 +45,8 @@ export default class Leg {
 
   drawStraight(ctx) {
     const dist = Math.max(this.from.o.distance(this.to.o), this.from.v.distance(this.to.v)) / this.from.o.distance(this.to.o)
-    ctx.strokeStyle = '#333'
-    // ctx.strokeStyle = `hsla(${dist * dist * 0.3}, 100%, ${15 + dist * dist * 0.5}%, 1)`
+    // ctx.strokeStyle = '#333'
+    ctx.strokeStyle = `hsla(${dist * dist * 0.3}, 100%, ${15 + dist * dist * 0.5}%, 1)`
     ctx.setLineDash([])
     ctx.beginPath()
     ctx.moveTo(this.from.v.x, this.from.v.y)
@@ -51,13 +56,39 @@ export default class Leg {
   }
 
   drawCurved(ctx) {
-    const p = new Path2D(this.createPathString())
+    const p = new Path2D(this.path)
     ctx.lineWidth = 1
-    ctx.strokeStyle = this.active ? 'orange' : '#333'
-    // ctx.strokeStyle = 'rgba(255, 127, 0, 0.01)'
+    // ctx.strokeStyle = '#333'
+    ctx.strokeStyle = this.active ? 'lime' : '#333'
+    // ctx.strokeStyle = 'rgba(255, 127, 0, 1)'
     // ctx.globalCompositeOperation = 'screen'
     // ctx.strokeStyle = `hsla(${this.from.v.distance(this.to.v)}, 100%, 50%, 1)`
     ctx.setLineDash([])
     ctx.stroke(p)
+  }
+
+  drawTrains(ctx) {
+    this.activeTrips.forEach(trip => {
+      const point = this.props.getPointAtLength(((this.store.get().elapsed - trip.depart) / (trip.arrive - trip.depart)) * this.props.getTotalLength())
+      
+      // ctx.fillStyle = `hsla(${trip.trainId % 360}, 100%, 50%, 0.1)`
+      // ctx.fillStyle = `hsla(${this.from.v.distance(this.to.v)}, 100%, 50%, 1)`
+      ctx.fillStyle = 'lime'
+      ctx.beginPath()
+      ctx.ellipse(
+        point.x,
+        point.y,
+        2,
+        2,
+        0,
+        0,
+        Math.PI * 2)
+      ctx.fill()
+      ctx.closePath()
+    })
+    // path.getPointAtLength(((elapsed - trip.depart + 1) / (trip.arrive - trip.depart)) * path.getTotalLength())
+
+    
+  
   }
 }
