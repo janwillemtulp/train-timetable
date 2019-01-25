@@ -20,7 +20,7 @@
     oncreate() {
       const ctx = setupCanvas(this.refs.canvas)
       console.log(this.get(), this.store.get())
-      console.log(this.store.get().activeTrips.map(d => d.leg.dist / d.duration))
+      // console.log(this.store.get().activeTrips.map(d => d.leg.dist / d.duration))
 
       this.store.on('state', ({ changed, current, previous}) => {
         if (changed.elapsed) {
@@ -31,13 +31,6 @@
 
           ctx.clearRect(0, 0, rect.width * dpr, rect.height * dpr)
           ctx.save()
-
-          legs.forEach(leg => leg.from.v.mix(leg.from.o, 0.0015))
-          activeLegs.forEach(activeLeg => activeLeg.leg.from.v.mix(activeLeg.leg.to.v, Math.log(1 + 0.015 * activeLeg.trips.reduce((acc, cur) => acc + (activeLeg.leg.dist / cur.duration), 0))))
-          // console.log(activeLegs[0].trips.reduce((acc, cur) => { acc + activeLegs[0].leg.dist / cur.duration}, 0))
-          // console.log(Math.log(1 + activeLegs[0].trips.reduce((acc, cur) => acc + (activeLegs[0].leg.dist / cur.duration), 0)))
-          ctx.lineWidth = 1
-          ctx.strokeStyle = '#333'
           
           /* globalCompositeOperation :
             normal | multiply | screen | overlay | 
@@ -47,48 +40,10 @@
           */
           // ctx.globalCompositeOperation = 'multiply';
           
-
           legs.forEach(leg => {
-            ctx.strokeStyle = '#333'
-            ctx.setLineDash([])
-            ctx.beginPath()
-            ctx.moveTo(leg.from.v.x, leg.from.v.y)
-            ctx.lineTo(leg.to.v.x, leg.to.v.y)
-            ctx.stroke()
-            ctx.closePath()
-            
-            // ctx.setLineDash([1, 1.5])
+            // leg.drawStraight(ctx)
+            leg.drawCurved(ctx)
           })
-
-
-          // legs.forEach(leg => {
-          //   const p = new Path2D(leg.createPathString())
-          //   ctx.setLineDash([])
-          //   ctx.stroke(p)
-            
-          //   // ctx.setLineDash([1, 1.5])
-          //   // ctx.stroke(p)
-          // })
-          
-          // ctx.lineWidth = 1
-          // ctx.strokeStyle = '#777'
-
-          // activeLegs.forEach(leg => {
-          //   // ctx.strokeStyle = `hsla(${0 + leg.leg.from.v.distance(leg.leg.to.v) * 0.6}, 100%, ${30 + leg.leg.from.v.distance(leg.leg.to.v) * 0.3}%, 1)`
-          //   ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)'
-          //   const p = new Path2D(leg.leg.createPathString())
-          //   ctx.setLineDash([])
-          //   ctx.stroke(p)
-
-          //   // ctx.beginPath()
-          //   // ctx.moveTo(leg.leg.from.v.x, leg.leg.from.v.y)
-          //   // ctx.lineTo(leg.leg.to.v.x, leg.leg.to.v.y)
-          //   // ctx.stroke()
-          //   // ctx.closePath()
-
-          //   // ctx.setLineDash([1, 1.5])
-          //   // ctx.stroke(p)
-          // })
 
           ctx.fillStyle = '#fff'
           ctx.strokeStyle = '#000'
@@ -96,8 +51,8 @@
           // console.log(stations[338].v.clone().subtract(stations[338].o).angleDeg(stations[338].v))
           stations.forEach(station => {
             station.drawOffsetPosition(ctx, station)
-            station.drawOffsetLine(ctx, station)
-            station.drawLabel(ctx, station)
+            // station.drawOffsetLine(ctx, station)
+            // station.drawLabel(ctx, station)
           })
 
           ctx.restore()

@@ -26,6 +26,8 @@
 	import { select, mouse} from 'd3-selection'
 	import Victor from 'victor'
 	import Station from './domain/Station'
+	import Leg from './domain/Leg'
+	import Trip from './domain/Trip'
 
 	const dist = (from, to) => Math.sqrt(Math.pow(to[0] - from[0], 2) + Math.pow(to[1] - from[1], 2))
 
@@ -42,7 +44,6 @@
 	export default {
 		store: () => store,
 		oncreate() {
-			
 			// from: https://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
 			var stop = false;
 			var frameCount = 0;
@@ -69,12 +70,6 @@
 			}
 
 			startAnimating(60)
-		},
-		onupdate() {
-			// select('svg')
-			// 	.on('mousemove', () => this.store.set({
-			// 		elapsed: 0 + (mouse(this.refs.svg)[0] / 1000) * (720 - 0)
-			// 	}))
 		},
 		data: () => ({
 			width: window.innerHeight,
@@ -103,48 +98,18 @@
 						const from = stations.find(s => s.shortName === d.from)
 						const to = stations.find(s => s.shortName === d.to)
 
-						return {
-							...d,
-							'tarif-unit': +d['tarif-unit'],
-							dist: +d.dist,
-							ix: +d.ix,
-							from,
-							to,
-							angle: Math.atan2(to.y - from.y, to.x - from.x)
-						}
+						return new Leg(d, from, to, store)
 					})
-					.map(d => ({
-						...d,
-						createPathString: function() {
-							const angle = (Math.PI * 0.5) + Math.atan2(this.to.v.y - this.from.v.y, this.to.v.x - this.from.v.x)
-							const dist = Math.sqrt(Math.pow(this.to.v.x - this.from.v.x, 2) + Math.pow(this.to.v.y - this.from.v.y, 2))
-
-							const cx = ((this.from.v.x + this.to.v.x) / 2) + (Math.cos(angle) * dist * 0.15)
-							const cy = ((this.from.v.y + this.to.v.y) / 2) + (Math.sin(angle) * dist * 0.15)
-
-							return `M${this.from.v.x} ${this.from.v.y} Q ${cx} ${cy} ${this.to.v.x} ${this.to.v.y}`
-						}
-					}))
-
-					const trips = results[2].map(d => ({
-						...d,
-						arrive: +d.arrive % 1440,
-						depart: +d.depart % 1440,
-						duration: (+d.arrive % 1440) - (+d.depart % 1440),
-						leg: legs.find((l, i) => i === +d['leg-index']),
-						'train-id': +d['train-id'],
-						serie: Math.round(+d['train-id'] / 100) * 100,
-						'leg-index': +d['leg-index'],
-						'trip-id': +d['trip-id'],
-					}))
-					
-					// .filter(d => [1400, 14000, 5700, 7400, 6000, 5600, 2900, 6900, 3000, 8800, 3100, 11700, 2800, 6500, 5500, 3500, 1700, 7300, 2000, 500, 600, 4900, 14900, 3900, 800, 28300, 2100, 900, 1800, 7000, 3200, 4000, 8900, 3600, 6100, 11800, 7500, 5000, 700, 5800, 6600, 15000, 21400, 0, 23400, 22400].includes(d['serie']))
-					// .filter(d => ['ut', 'asd', 'rtd', 'zl', 'zp'].includes(d.leg.from['short-name']) || ['ut', 'asd', 'rtd', 'zl', 'zp'].includes(d.leg.to['short-name']))
-					// .filter(d => 100 * Math.floor(d['train-id'] / 100) === 3900)
-					// console.log([...new Set(trips.filter(d => ['ut'].includes(d.leg.from['short-name']) || ['ut'].includes(d.leg.to['short-name'])).map(d => d['serie']))])
-					// console.log(trips.filter(d => 768 >= d.depart && d.arrive >= 768))
-
-					// console.log(stations, legs, trips)
+					console.log(results[1])
+					const trips = []
+					results[2].forEach(d => {
+						const trip = new Trip(d)
+						
+						legs[+d['leg-index']].trips.push(trip)
+						trips.push(trip)
+					})
+				
+					console.log(stations, legs, trips)
 
 					store.set({
 						stations,
@@ -159,22 +124,8 @@
 
 					return
 			})
-			// promise: new Promise(resolve => {
-			// 	csv('./data/stations.csv', row => ({
-			// 		...row,
-			// 		lat: +row.lat,
-			// 		lon: +row.lon
-			// 	}))
-			// 		.then(data => {
-			// 			console.log(data)
-			// 			resolve(data)
-			// 		})
-			// }),
 		}),
 		components: {
-			// Stations: './Stations.svelte',
-			// Legs: './Legs.svelte',
-			// Trips: './Trips.svelte',
 			Canvas: './Canvas.svelte'
 		}
 	}
