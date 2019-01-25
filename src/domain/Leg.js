@@ -1,6 +1,6 @@
 export default class Leg {
   constructor(d, from, to, store) {
-    this.tariffUnit =  +d['tarif-unit']
+    this.tariffUnit = +d['tarif-unit']
     this.dist = +d.dist
     this.ix = +d.ix
     this.from = from
@@ -14,16 +14,15 @@ export default class Leg {
 
     store.on('state', ({ changed, current, previous }) => {
       if (changed.elapsed) {
-        this.activeTrips = this.trips
-          .filter(d => d.depart <= current.elapsed && current.elapsed <= d.arrive)
+        this.activeTrips = this.trips.filter(d => d.isActive(current.elapsed))
+  
+        this.from.v.mix(this.from.o, 0.005)
 
-        this.from.v.mix(this.from.o, 0.002)
-
-        if (this.active) {
-          this.from.v.mix(this.to.v, Math.log(1 + 0.002 * this.trips.reduce((acc, cur) => acc + (this.dist / cur.duration), 0)))
+        if (this.active && this.store.get().distort) {
+          this.from.v.mix(this.to.v, Math.log(1 + 0.001 * this.trips.reduce((acc, cur) => acc + (this.dist / cur.duration), 0)))
         }
 
-        this.path = this. createPathString()
+        this.path = this.createPathString()
         this.props = spp.svgPathProperties(this.path)
       }
     })
@@ -43,9 +42,16 @@ export default class Leg {
     return `M${this.from.v.x} ${this.from.v.y} Q ${cx} ${cy} ${this.to.v.x} ${this.to.v.y}`
   }
 
+  /* globalCompositeOperation :
+          normal | multiply | screen | overlay |
+          darken | lighten | color-dodge | color-burn | hard-light |
+          soft-light | difference | exclusion | hue | saturation |
+          color | luminosity
+        */
+
   drawStraight(ctx) {
     const dist = Math.max(this.from.o.distance(this.to.o), this.from.v.distance(this.to.v)) / this.from.o.distance(this.to.o)
-    
+
     ctx.strokeStyle = '#333'
     // ctx.strokeStyle = `hsla(${dist * dist * 0.3}, 100%, ${15 + dist * dist * 0.5}%, 1)`
     // ctx.globalCompositeOperation = 'screen'
@@ -61,28 +67,34 @@ export default class Leg {
 
   drawCurved(ctx) {
     const p = new Path2D(this.path)
-    ctx.strokeStyle = 'rgba(51, 121, 204, 0.3)'
+    ctx.lineWidth = this.active ? 2 : 1
+    ctx.strokeStyle = this.active ? 'rgba(51, 121, 204, 0.5)' : 'rgba(51, 121, 204, 0.3)'
     // ctx.strokeStyle = 'rgba(255, 165, 0, 0.3)'
-    // ctx.strokeStyle = `hsla(${this.from.v.distance(this.to.v) / this.from.o.distance(this.to.o) * 3}, 100%, ${10 + this.from.v.distance(this.to.v) / this.from.o.distance(this.to.o) * 5}%, 1)`
+    // ctx.strokeStyle = 'rgba(51, 121, 204, 0.3)' // NS blue
+    // ctx.strokeStyle = `hsla(${200 + this.from.v.distance(this.to.v) / this.from.o.distance(this.to.o) * 10}, 100%, 50%, 0.5)`
     // ctx.strokeStyle = this.active ? 'lime' : '#333'
     // ctx.strokeStyle = 'rgba(255, 127, 0, 0.01)'
     // ctx.globalCompositeOperation = 'screen'
-    // ctx.strokeStyle = `hsla(${this.from.v.distance(this.to.v)}, 100%, 50%, 1)`
+    // ctx.strokeStyle = `hsla(${this.from.v.distance(this.to.v)}, 100%, 50%, 0.3)`
     ctx.setLineDash([])
     ctx.stroke(p)
   }
 
   drawTrains(ctx) {
     const elapsed = this.store.get().elapsed
-    // ctx.strokeStyle = 'orange'
-    ctx.strokeStyle = 'rgb(247, 202, 73)'
+
+    ctx.strokeStyle = 'orange'
+    // ctx.strokeStyle = 'rgb(247, 202, 73)' // NS yellow
     ctx.lineWidth = 2
     // ctx.setLineDash([1, 1.5])
 
     this.activeTrips.forEach(trip => {
+      // elapsed will reset to 0 after it reached 1440, so I need to account for situations where
+      // departure is after arrive, for instance, departure: 1439, arrive: 8
+      const ratio = ((elapsed < trip.depart ? 1440 + elapsed : elapsed) - trip.depart + 1) / trip.duration
       
-      const front = this.props.getPointAtLength(((elapsed - trip.depart + 1) / (trip.arrive - trip.depart)) * this.props.getTotalLength())
-      const back = this.props.getPointAtLength(((elapsed - trip.depart + 1) / (trip.arrive - trip.depart)) * this.props.getTotalLength() - 7)
+      const front = this.props.getPointAtLength(ratio * this.props.getTotalLength())
+      const back = this.props.getPointAtLength(ratio * this.props.getTotalLength() - 7)
 
       ctx.beginPath()
       ctx.moveTo(front.x, front.y)

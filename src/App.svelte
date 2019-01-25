@@ -1,4 +1,4 @@
-<div>
+<div style="position: relative;">
 	{#await promise}
 		<p style="color: white;">loading...</p>
 	{:then}
@@ -10,6 +10,11 @@
 		<!-- </svg> -->
 		<Canvas />
 	{/await}
+	<div style="position: absolute; top: 20px; left: 20px">
+		<button on:click="toggleLabels()">toggle labels</button>
+		<button on:click="toggleDistort()">toggle distortion</button>
+		<input type="range" min="0.05" max="2" value="1" step="0.01" on:input="updateIncrement(this.value)" />
+	</div>
 </div>
 
 <style>
@@ -65,7 +70,8 @@
 				if (elapsed > fpsInterval) {
 						then = now - (elapsed % fpsInterval)
 
-						store.set({ elapsed: (store.get().elapsed + 1) % 1440 })
+						store.set({ elapsed: (store.get().elapsed + store.get().increment) % 1440 })
+
 				}
 			}
 
@@ -109,6 +115,7 @@
 						leg.trips.push(trip)
 						trips.push(trip)
 					})
+					console.log(trips.filter(d => d.arrive <= d.depart))
 				
 					console.log(stations, legs, trips)
 
@@ -125,6 +132,21 @@
 					return
 			})
 		}),
+		methods: {
+			toggleLabels() {
+				this.store.set({
+					showLabels: !this.store.get().showLabels
+				})
+			},
+			toggleDistort() {
+				this.store.set({
+					distort: !this.store.get().distort
+				})
+			},
+			updateIncrement(value) {
+				this.store.set({ increment: +value })
+			}
+		},
 		components: {
 			Canvas: './Canvas.svelte'
 		}

@@ -2,6 +2,7 @@
 
 <script>
   import { forceSimulation } from 'd3-force'
+  import Clock from './domain/Clock'
 
   const setupCanvas = canvas => {
     const dpr = window.devicePixelRatio || 1;
@@ -20,7 +21,8 @@
     oncreate() {
       const ctx = setupCanvas(this.refs.canvas)
       console.log(this.get(), this.store.get())
-      // console.log(this.store.get().activeTrips.map(d => d.leg.dist / d.duration))
+      
+      const clock = new Clock(this.store)
 
       this.store.on('state', ({ changed, current, previous}) => {
         if (changed.elapsed) {
@@ -31,29 +33,21 @@
 
           ctx.clearRect(0, 0, rect.width * dpr, rect.height * dpr)
           ctx.save()
-          
-          /* globalCompositeOperation :
-            normal | multiply | screen | overlay | 
-            darken | lighten | color-dodge | color-burn | hard-light | 
-            soft-light | difference | exclusion | hue | saturation | 
-            color | luminosity
-          */
-          // ctx.globalCompositeOperation = 'multiply';
-          
+
+          clock.draw(ctx)
+            
           legs.forEach(leg => {
             // leg.drawStraight(ctx)
             leg.drawCurved(ctx)
             leg.drawTrains(ctx)
           })
 
-          ctx.fillStyle = '#fff'
-          ctx.strokeStyle = '#000'
-          ctx.lineWidth = 1
-          // console.log(stations[338].v.clone().subtract(stations[338].o).angleDeg(stations[338].v))
           stations.forEach(station => {
             station.drawOffsetPosition(ctx)
             // station.drawOffsetLine(ctx)
-            // station.drawLabel(ctx)
+            if (this.store.get().showLabels) {
+              station.drawLabel(ctx)
+            }
             // station.drawOriginalPosition(ctx)
           })
 

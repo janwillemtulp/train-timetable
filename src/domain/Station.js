@@ -10,7 +10,10 @@ export default class Station {
     this.o = new Victor(x(+d.lon), y(+d.lat))
     this.v = new Victor(x(+d.lon), y(+d.lat))
     this.stationRadius = this.type.indexOf('megastation') > -1 ? 3 : this.type.indexOf('knooppunt') > -1 ? 2 : 1
-    this.showLabel = ['megastation', 'knooppuntintercitystation'].includes(this.type)
+    this.showLabel = [
+      'megastation',
+      'knooppuntintercitystation'
+    ].includes(this.type)
   }
 
   drawLabel(ctx) {
@@ -22,8 +25,11 @@ export default class Station {
   }
 
   drawOffsetPosition(ctx) {
+    // ctx.save()
     ctx.fillStyle = 'rgba(255, 255, 255, 1)'
     ctx.strokeStyle = '#000'
+    // ctx.shadowBlur = 10
+    // ctx.shadowColor = 'white'
     // ctx.globalCompositeOperation = 'screen'
     // ctx.fillStyle = `hsla(${this.v.clone().subtract(this.o).angleDeg(this.v)}, 100%, 100%, 0.1)`
     ctx.lineWidth = 1
@@ -42,6 +48,7 @@ export default class Station {
     // ctx.stroke()
     ctx.fill()
     ctx.closePath()
+    // ctx.restore()
   }
 
   drawOffsetLine(ctx) {
@@ -50,6 +57,7 @@ export default class Station {
     // ctx.setLineDash([1, 1.5])
     // ctx.globalCompositeOperation = 'screen'
     ctx.strokeStyle = `hsla(${this.v.clone().subtract(this.o).angleDeg(this.v)}, 100%, 50%, 1)`
+    // ctx.strokeStyle = `hsla(180, 100%, ${10 + this.o.distance(this.v) * 0.1}%, 1)`
     // ctx.setLineDash([])
 
     ctx.beginPath() // does not go right yet. stations are not updated
