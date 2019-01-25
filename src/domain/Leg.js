@@ -17,10 +17,10 @@ export default class Leg {
         this.activeTrips = this.trips
           .filter(d => d.depart <= current.elapsed && current.elapsed <= d.arrive)
 
-        this.from.v.mix(this.from.o, 0.001)
+        this.from.v.mix(this.from.o, 0.002)
 
         if (this.active) {
-          this.from.v.mix(this.to.v, Math.log(1 + 0.001 * this.trips.reduce((acc, cur) => acc + (this.dist / cur.duration), 0)))
+          this.from.v.mix(this.to.v, Math.log(1 + 0.002 * this.trips.reduce((acc, cur) => acc + (this.dist / cur.duration), 0)))
         }
 
         this.path = this. createPathString()
@@ -45,8 +45,12 @@ export default class Leg {
 
   drawStraight(ctx) {
     const dist = Math.max(this.from.o.distance(this.to.o), this.from.v.distance(this.to.v)) / this.from.o.distance(this.to.o)
-    // ctx.strokeStyle = '#333'
-    ctx.strokeStyle = `hsla(${dist * dist * 0.3}, 100%, ${15 + dist * dist * 0.5}%, 1)`
+    
+    ctx.strokeStyle = '#333'
+    // ctx.strokeStyle = `hsla(${dist * dist * 0.3}, 100%, ${15 + dist * dist * 0.5}%, 1)`
+    // ctx.globalCompositeOperation = 'screen'
+    // ctx.strokeStyle = `hsla(${this.from.v.distance(this.to.v)}, 100%, 50%, 1)`
+    // ctx.strokeStyle = `hsla(${(270 + this.from.v.distance(this.to.v) / this.from.o.distance(this.to.o) * 10) % 360}, 100%, ${10 + this.from.v.distance(this.to.v) / this.from.o.distance(this.to.o) * 5}%, 0.01)`
     ctx.setLineDash([])
     ctx.beginPath()
     ctx.moveTo(this.from.v.x, this.from.v.y)
@@ -57,10 +61,11 @@ export default class Leg {
 
   drawCurved(ctx) {
     const p = new Path2D(this.path)
-    ctx.lineWidth = 1
-    // ctx.strokeStyle = '#333'
-    ctx.strokeStyle = this.active ? 'lime' : '#333'
-    // ctx.strokeStyle = 'rgba(255, 127, 0, 1)'
+    ctx.strokeStyle = 'rgba(51, 121, 204, 0.3)'
+    // ctx.strokeStyle = 'rgba(255, 165, 0, 0.3)'
+    // ctx.strokeStyle = `hsla(${this.from.v.distance(this.to.v) / this.from.o.distance(this.to.o) * 3}, 100%, ${10 + this.from.v.distance(this.to.v) / this.from.o.distance(this.to.o) * 5}%, 1)`
+    // ctx.strokeStyle = this.active ? 'lime' : '#333'
+    // ctx.strokeStyle = 'rgba(255, 127, 0, 0.01)'
     // ctx.globalCompositeOperation = 'screen'
     // ctx.strokeStyle = `hsla(${this.from.v.distance(this.to.v)}, 100%, 50%, 1)`
     ctx.setLineDash([])
@@ -68,27 +73,22 @@ export default class Leg {
   }
 
   drawTrains(ctx) {
-    this.activeTrips.forEach(trip => {
-      const point = this.props.getPointAtLength(((this.store.get().elapsed - trip.depart) / (trip.arrive - trip.depart)) * this.props.getTotalLength())
-      
-      // ctx.fillStyle = `hsla(${trip.trainId % 360}, 100%, 50%, 0.1)`
-      // ctx.fillStyle = `hsla(${this.from.v.distance(this.to.v)}, 100%, 50%, 1)`
-      ctx.fillStyle = 'lime'
-      ctx.beginPath()
-      ctx.ellipse(
-        point.x,
-        point.y,
-        2,
-        2,
-        0,
-        0,
-        Math.PI * 2)
-      ctx.fill()
-      ctx.closePath()
-    })
-    // path.getPointAtLength(((elapsed - trip.depart + 1) / (trip.arrive - trip.depart)) * path.getTotalLength())
+    const elapsed = this.store.get().elapsed
+    // ctx.strokeStyle = 'orange'
+    ctx.strokeStyle = 'rgb(247, 202, 73)'
+    ctx.lineWidth = 2
+    // ctx.setLineDash([1, 1.5])
 
-    
-  
+    this.activeTrips.forEach(trip => {
+      
+      const front = this.props.getPointAtLength(((elapsed - trip.depart + 1) / (trip.arrive - trip.depart)) * this.props.getTotalLength())
+      const back = this.props.getPointAtLength(((elapsed - trip.depart + 1) / (trip.arrive - trip.depart)) * this.props.getTotalLength() - 7)
+
+      ctx.beginPath()
+      ctx.moveTo(front.x, front.y)
+      ctx.lineTo(back.x, back.y)
+      ctx.closePath()
+      ctx.stroke()
+    })
   }
 }

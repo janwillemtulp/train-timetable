@@ -51,9 +51,10 @@
           ctx.lineWidth = 1
           // console.log(stations[338].v.clone().subtract(stations[338].o).angleDeg(stations[338].v))
           stations.forEach(station => {
-            station.drawOffsetPosition(ctx, station)
-            // station.drawOffsetLine(ctx, station)
-            // station.drawLabel(ctx, station)
+            station.drawOffsetPosition(ctx)
+            // station.drawOffsetLine(ctx)
+            // station.drawLabel(ctx)
+            // station.drawOriginalPosition(ctx)
           })
 
           ctx.restore()

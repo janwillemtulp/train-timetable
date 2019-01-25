@@ -65,7 +65,7 @@
 				if (elapsed > fpsInterval) {
 						then = now - (elapsed % fpsInterval)
 
-						store.set({ elapsed: (store.get().elapsed + 0.5) % 1440 })
+						store.set({ elapsed: (store.get().elapsed + 1) % 1440 })
 				}
 			}
 
