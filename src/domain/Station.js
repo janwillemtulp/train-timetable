@@ -5,14 +5,18 @@ export default class Station {
     this.fullName = d['full-name']
     this.shortName = d['short-name']
     this.type = d['type'].toLowerCase()
-    this.x = x(+d.lon)
-    this.y = y(+d.lat)
     this.o = new Victor(x(+d.lon), y(+d.lat))
     this.v = new Victor(x(+d.lon), y(+d.lat))
     this.stationRadius = this.type.indexOf('megastation') > -1 ? 3 : this.type.indexOf('knooppunt') > -1 ? 2 : 1
     this.showLabel = [
+      'knooppuntintercitystation',
+      // 'stoptreinstation',
+      'intercitystation',
+      // 'knooppuntstoptreinstation',
       'megastation',
-      'knooppuntintercitystation'
+      // 'facultatiefstation',
+      // 'knooppuntsneltreinstation',
+      // 'sneltreinstation'
     ].includes(this.type)
   }
 

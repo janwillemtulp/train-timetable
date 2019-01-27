@@ -56,7 +56,7 @@ export default class Leg {
     // ctx.strokeStyle = `hsla(${dist * dist * 0.3}, 100%, ${15 + dist * dist * 0.5}%, 1)`
     // ctx.globalCompositeOperation = 'screen'
     // ctx.strokeStyle = `hsla(${this.from.v.distance(this.to.v)}, 100%, 50%, 1)`
-    // ctx.strokeStyle = `hsla(${(270 + this.from.v.distance(this.to.v) / this.from.o.distance(this.to.o) * 10) % 360}, 100%, ${10 + this.from.v.distance(this.to.v) / this.from.o.distance(this.to.o) * 5}%, 0.01)`
+    ctx.strokeStyle = `hsla(${180 + (this.from.v.distance(this.to.v) / this.from.o.distance(this.to.o) * 10) % 180}, 100%, 50%, 1)`
     ctx.setLineDash([])
     ctx.beginPath()
     ctx.moveTo(this.from.v.x, this.from.v.y)
@@ -66,12 +66,14 @@ export default class Leg {
   }
 
   drawCurved(ctx) {
+    const distanceRatio = this.from.v.distanceSq(this.to.v) / this.from.o.distance(this.to.o)
+
     const p = new Path2D(this.path)
     ctx.lineWidth = this.active ? 2 : 1
     ctx.strokeStyle = this.active ? 'rgba(51, 121, 204, 0.5)' : 'rgba(51, 121, 204, 0.3)'
     // ctx.strokeStyle = 'rgba(255, 165, 0, 0.3)'
     // ctx.strokeStyle = 'rgba(51, 121, 204, 0.3)' // NS blue
-    // ctx.strokeStyle = `hsla(${200 + this.from.v.distance(this.to.v) / this.from.o.distance(this.to.o) * 10}, 100%, 50%, 0.5)`
+    // ctx.strokeStyle = `hsla(200, 100%, ${30 + distanceRatio * 0.1}%, ${this.active ? 0.5 : 0.3})`
     // ctx.strokeStyle = this.active ? 'lime' : '#333'
     // ctx.strokeStyle = 'rgba(255, 127, 0, 0.01)'
     // ctx.globalCompositeOperation = 'screen'
@@ -101,6 +103,10 @@ export default class Leg {
       ctx.lineTo(back.x, back.y)
       ctx.closePath()
       ctx.stroke()
+
+      // ctx.fillStyle = `hsla(${Math.floor(trip.series / 1000) * 20}, 50%, 50%, 1)`
+      // ctx.textAlign = 'center'
+      // ctx.fillText(trip.series, front.x, front.y - 10)
     })
   }
 }

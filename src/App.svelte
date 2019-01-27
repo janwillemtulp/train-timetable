@@ -115,7 +115,6 @@
 						leg.trips.push(trip)
 						trips.push(trip)
 					})
-					console.log(trips.filter(d => d.arrive <= d.depart))
 				
 					console.log(stations, legs, trips)
 
