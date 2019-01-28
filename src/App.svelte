@@ -104,13 +104,13 @@
 						const from = stations.find(s => s.shortName === d.from)
 						const to = stations.find(s => s.shortName === d.to)
 
-						return new Leg(d, from, to, store)
+						return new Leg(d, from, to)
 					})
 
 					const trips = []
 					results[2].forEach(d => {
 						const leg = legs[+d['leg-index']]
-						const trip = new Trip(d)
+						const trip = new Trip(d, leg)
 						
 						leg.trips.push(trip)
 						trips.push(trip)

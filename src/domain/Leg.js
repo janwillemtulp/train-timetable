@@ -1,5 +1,5 @@
 export default class Leg {
-  constructor(d, from, to, store) {
+  constructor(d, from, to) {
     this.tariffUnit = +d['tarif-unit']
     this.dist = +d.dist
     this.ix = +d.ix
@@ -7,29 +7,13 @@ export default class Leg {
     this.to = to
     this.angle = Math.atan2(this.to.y - this.from.y, this.to.x - this.from.x)
     this.trips = []
-    this.activeTrips = this.trips
     this.path = ''
     this.props = undefined
-    this.store = store
-
-    store.on('state', ({ changed, current, previous }) => {
-      if (changed.elapsed) {
-        this.activeTrips = this.trips.filter(d => d.isActive(current.elapsed))
-  
-        this.from.v.mix(this.from.o, 0.005)
-
-        if (this.active && this.store.get().distort) {
-          this.from.v.mix(this.to.v, Math.log(1 + 0.001 * this.trips.reduce((acc, cur) => acc + (this.dist / cur.duration), 0)))
-        }
-
-        this.path = this.createPathString()
-        this.props = spp.svgPathProperties(this.path)
-      }
-    })
   }
 
   get active() {
-    return this.activeTrips.length > 0
+    // return this.activeTrips.length > 0
+    return this.trips.filter(d => d.active).length > 0
   }
 
   createPathString() {
@@ -66,9 +50,14 @@ export default class Leg {
   }
 
   drawCurved(ctx) {
-    const distanceRatio = this.from.v.distanceSq(this.to.v) / this.from.o.distance(this.to.o)
+    if (!this.path) {
+      this.path = this.createPathString()
+      this.props = spp.svgPathProperties(this.path)
+    }
 
+    const distanceRatio = this.from.v.distanceSq(this.to.v) / this.from.o.distance(this.to.o)
     const p = new Path2D(this.path)
+
     ctx.lineWidth = this.active ? 2 : 1
     ctx.strokeStyle = this.active ? 'rgba(51, 121, 204, 0.5)' : 'rgba(51, 121, 204, 0.3)'
     // ctx.strokeStyle = 'rgba(255, 165, 0, 0.3)'
@@ -82,15 +71,14 @@ export default class Leg {
     ctx.stroke(p)
   }
 
-  drawTrains(ctx) {
-    const elapsed = this.store.get().elapsed
-
+  drawTrains(ctx, elapsed) {
     ctx.strokeStyle = 'orange'
     // ctx.strokeStyle = 'rgb(247, 202, 73)' // NS yellow
     ctx.lineWidth = 2
     // ctx.setLineDash([1, 1.5])
 
-    this.activeTrips.forEach(trip => {
+    // this.activeTrips.forEach(trip => {
+    this.trips.filter(d => d.active).forEach(trip => {
       // elapsed will reset to 0 after it reached 1440, so I need to account for situations where
       // departure is after arrive, for instance, departure: 1439, arrive: 8
       const ratio = ((elapsed < trip.depart ? 1440 + elapsed : elapsed) - trip.depart + 1) / trip.duration

@@ -26,7 +26,7 @@
 
       this.store.on('state', ({ changed, current, previous}) => {
         if (changed.elapsed) {
-          const { legs, activeLegs, stations } = this.store.get()
+          const { legs, stations, elapsed } = this.store.get()
 
           const dpr = window.devicePixelRatio || 1;
           const rect = this.refs.canvas.getBoundingClientRect()
@@ -39,7 +39,7 @@
           legs.forEach(leg => {
             // leg.drawStraight(ctx)
             leg.drawCurved(ctx)
-            leg.drawTrains(ctx)
+            leg.drawTrains(ctx, elapsed)
           })
 
           stations.forEach(station => {
