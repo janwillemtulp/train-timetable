@@ -59,7 +59,7 @@ export default class Leg {
     const p = new Path2D(this.path)
 
     ctx.lineWidth = this.active ? 2 : 1
-    ctx.strokeStyle = this.active ? 'rgba(51, 121, 204, 0.5)' : 'rgba(51, 121, 204, 0.3)'
+    ctx.strokeStyle = this.active ? 'rgba(51, 121, 204, 0.4)' : 'rgba(51, 121, 204, 0.3)'
     // ctx.strokeStyle = 'rgba(255, 165, 0, 0.3)'
     // ctx.strokeStyle = 'rgba(51, 121, 204, 0.3)' // NS blue
     // ctx.strokeStyle = `hsla(200, 100%, ${30 + distanceRatio * 0.1}%, ${this.active ? 0.5 : 0.3})`

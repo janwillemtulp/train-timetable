@@ -32,7 +32,7 @@ store.on('state', ({ changed, current, previous }) => {
       leg.from.v.mix(leg.from.o, 0.0025)
 
       if (leg.active && current.distort) {
-        leg.from.v.mix(leg.to.v, Math.log(1 + 0.001 * leg.trips.reduce((acc, cur) => acc + (leg.dist / cur.duration), 0)))
+        leg.from.v.mix(leg.to.v, Math.log(1.01 + 0.001 * leg.trips.reduce((acc, cur) => acc + (leg.dist / cur.duration), 0)))
       }
 
       leg.path = undefined
