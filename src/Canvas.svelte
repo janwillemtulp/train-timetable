@@ -4,16 +4,17 @@
   import Clock from './domain/Clock'
 
   const setupCanvas = canvas => {
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1
+    const rect = canvas.getBoundingClientRect()
 
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
+    canvas.width = rect.width * dpr
+    canvas.height = rect.height * dpr
   
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: false })
 
-    ctx.scale(dpr, dpr);
-    return ctx;
+    ctx.scale(dpr, dpr)
+    
+    return ctx
   }
 
   export default {

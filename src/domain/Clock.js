@@ -84,6 +84,7 @@ export default class Clock {
         ctx.strokeStyle = 'orange'
       } else {
         ctx.strokeStyle = `rgba(51, 121, 204, ${1 - (i / activeTrips.length)})`
+        // ctx.strokeStyle = `hsl(216, 67%, ${51 - (i / activeTrips.length * 51)}%)`
       }
       ctx.beginPath()
       ctx.moveTo(
@@ -102,7 +103,7 @@ export default class Clock {
     ctx.ellipse(
       this.center[0],
       this.center[1],
-      115, 115,
+      R, R,
       0, 0,
       Math.PI * 2
     )
@@ -115,7 +116,7 @@ export default class Clock {
       ctx.ellipse(
         this.center[0],
         this.center[1],
-        115 + 0.3 * (i + 1) * 100, 115 + 0.3 * (i + 1) * 100,
+        R + 0.3 * (i + 1) * 100, R + 0.3 * (i + 1) * 100,
         0, 0,
         Math.PI * 2
       )
@@ -127,8 +128,8 @@ export default class Clock {
     ctx.fillStyle = 'orange'
     ctx.fillText(
       activeTrips[0],
-      this.center[0] + Math.cos(-HALF_PI + startAngle + 0.02 * dataAngle) * (115 + activeTrips[0] * 0.3),
-      this.center[1] + Math.sin(-HALF_PI + startAngle + 0.02 * dataAngle) * (115 + activeTrips[0] * 0.3)
+      this.center[0] + Math.cos(-HALF_PI + startAngle + 0.025 * dataAngle) * (R + activeTrips[0] * 0.3),
+      this.center[1] + Math.sin(-HALF_PI + startAngle + 0.025 * dataAngle) * (R + activeTrips[0] * 0.3)
     )
   }
 

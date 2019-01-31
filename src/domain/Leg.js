@@ -60,6 +60,7 @@ export default class Leg {
 
     ctx.lineWidth = this.active ? 2 : 1
     ctx.strokeStyle = this.active ? 'rgba(51, 121, 204, 0.4)' : 'rgba(51, 121, 204, 0.3)'
+    // ctx.strokeStyle = this.active ? 'rgb(20, 34, 56)' : 'rgb(27, 48, 80)'
     // ctx.strokeStyle = 'rgba(255, 165, 0, 0.3)'
     // ctx.strokeStyle = 'rgba(51, 121, 204, 0.3)' // NS blue
     // ctx.strokeStyle = `hsla(200, 100%, ${30 + distanceRatio * 0.1}%, ${this.active ? 0.5 : 0.3})`
@@ -92,8 +93,8 @@ export default class Leg {
       const back = this.props.getPointAtLength(ratio * this.props.getTotalLength() - 7)
 
       ctx.beginPath()
-      ctx.moveTo(front.x, front.y)
-      ctx.lineTo(back.x, back.y)
+      ctx.moveTo(Math.round(front.x), Math.round(front.y))
+      ctx.lineTo(Math.round(back.x), Math.round(back.y))
       ctx.closePath()
       ctx.stroke()
 
