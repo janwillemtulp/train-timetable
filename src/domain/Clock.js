@@ -70,7 +70,7 @@ export default class Clock {
           300 + Math.sin((Math.PI * 2 / 12) - HALF_PI + (i / 60) * Math.PI * 2) * (R + 30) - 6,
         )
 
-        ctx.fillStyle = Math.floor(this.hours) === 13 + (i / 5) ? 'orange' : 'rgba(51, 121, 204, 0.6)'
+        ctx.fillStyle = Math.floor(this.hours) === 13 + (i / 5) || (Math.floor(this.hours) === 0 && 13 + (i / 5) === 24) ? 'orange' : 'rgba(51, 121, 204, 0.6)'
         ctx.font = 'normal 10px Arial'
         ctx.fillText(
           13 + (i / 5),

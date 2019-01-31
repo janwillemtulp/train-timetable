@@ -72,6 +72,11 @@ export default class Leg {
   }
 
   drawTrains(ctx, elapsed) {
+    if (!this.path) {
+      this.path = this.createPathString()
+      this.props = spp.svgPathProperties(this.path)
+    }
+
     ctx.strokeStyle = 'orange'
     // ctx.strokeStyle = 'rgb(247, 202, 73)' // NS yellow
     ctx.lineWidth = 2
