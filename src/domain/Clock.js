@@ -1,4 +1,4 @@
-import { range } from 'd3-array'
+import { range, mean } from 'd3-array'
 
 export default class Clock {
   constructor(store) {
@@ -128,8 +128,8 @@ export default class Clock {
     ctx.fillStyle = 'orange'
     ctx.fillText(
       activeTrips[0],
-      this.center[0] + Math.cos(-HALF_PI + startAngle + 0.025 * dataAngle) * (R + activeTrips[0] * 0.3),
-      this.center[1] + Math.sin(-HALF_PI + startAngle + 0.025 * dataAngle) * (R + activeTrips[0] * 0.3)
+      this.center[0] + Math.cos(-HALF_PI + startAngle + 0.025 * dataAngle) * (R + mean(activeTrips.slice(0, 10) )* 0.3),
+      this.center[1] + Math.sin(-HALF_PI + startAngle + 0.025 * dataAngle) * (R + mean(activeTrips.slice(0, 10)) * 0.3)
     )
   }
 
