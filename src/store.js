@@ -7,6 +7,7 @@ const store = new Store({
   stations: [],
   legs: [],
   trips: [],
+  activeTrips: [],
 
   showLabels: false,
   distort: true,
@@ -38,9 +39,25 @@ store.on('state', ({ changed, current, previous }) => {
       leg.path = undefined
     })
 
+    let activeTrips = current.activeTrips
+    
+    if (previous && Math.floor(previous.elapsed) !== Math.floor(current.elapsed)) {
+      activeTrips = current.activeTrips
+        .reduce((acc, cur, i) => {
+          if (i < 240) {
+            acc.unshift(cur)
+          }
+
+          return acc
+        }, [current.trips.filter(d => d.active).length])
+        .reverse()
+    }
+    
+
     store.set({
       trips: current.trips,
-      legs: current.legs
+      legs: current.legs,
+      activeTrips
     })
   }
 })

@@ -1,7 +1,6 @@
 <canvas style="width: 100%; height: 100%;" {width} {height} ref:canvas></canvas>
 
 <script>
-  import { forceSimulation } from 'd3-force'
   import Clock from './domain/Clock'
 
   const setupCanvas = canvas => {
@@ -26,15 +25,13 @@
 
       this.store.on('state', ({ changed, current, previous}) => {
         if (changed.elapsed) {
-          const { legs, stations, elapsed } = this.store.get()
+          const { legs, stations, elapsed, activeTrips } = this.store.get()
 
           const dpr = window.devicePixelRatio || 1;
           const rect = this.refs.canvas.getBoundingClientRect()
 
           ctx.clearRect(0, 0, rect.width * dpr, rect.height * dpr)
           ctx.save()
-
-          clock.draw(ctx)
             
           legs.forEach(leg => {
             // leg.drawStraight(ctx)
@@ -50,6 +47,9 @@
             }
             // station.drawOriginalPosition(ctx)
           })
+
+          clock.drawTrainCount(ctx, activeTrips)
+          clock.draw(ctx)
 
           ctx.restore()
         }
