@@ -3,7 +3,7 @@ import { range, mean } from 'd3-array'
 export default class Clock {
   constructor(store) {
     this.store = store
-    this.center = [250, 300]
+    this.center = [220, 300]
   }
 
   draw(ctx) {
@@ -126,10 +126,11 @@ export default class Clock {
     })
 
     ctx.fillStyle = 'orange'
+    ctx.textAlign = 'center'
     ctx.fillText(
-      activeTrips[0],
-      this.center[0] + Math.cos(-HALF_PI + startAngle + 0.025 * dataAngle) * (R + mean(activeTrips.slice(0, 10) )* 0.3),
-      this.center[1] + Math.sin(-HALF_PI + startAngle + 0.025 * dataAngle) * (R + mean(activeTrips.slice(0, 10)) * 0.3)
+      activeTrips[0] + ' trains',
+      this.center[0] + Math.cos(-HALF_PI + startAngle + 0.035 * dataAngle) * (R + mean(activeTrips.slice(0, 10)) * 0.3),
+      this.center[1] + Math.sin(-HALF_PI + startAngle + 0.035 * dataAngle) * (R + mean(activeTrips.slice(0, 10)) * 0.3)
     )
   }
 

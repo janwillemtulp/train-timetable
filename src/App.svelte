@@ -68,7 +68,7 @@
 
 				now = Date.now()
 				elapsed = now - then
-				if (Math.floor(frameCount % 10 === 0)) { console.log(Math.round(elapsed))}
+				// if (Math.floor(frameCount % 10 === 0)) { console.log(Math.round(elapsed))}
 				if (elapsed > fpsInterval) {
 						then = now - (elapsed % fpsInterval)
 
