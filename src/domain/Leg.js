@@ -93,8 +93,8 @@ export default class Leg {
       const back = this.props.getPointAtLength(ratio * this.props.getTotalLength() - 7)
 
       ctx.beginPath()
-      ctx.moveTo(Math.round(front.x), Math.round(front.y))
-      ctx.lineTo(Math.round(back.x), Math.round(back.y))
+      ctx.moveTo(front.x, front.y)
+      ctx.lineTo(back.x, back.y)
       ctx.closePath()
       ctx.stroke()
 
