@@ -127,6 +127,7 @@ export default class Clock {
 
     ctx.fillStyle = 'orange'
     ctx.textAlign = 'center'
+    ctx.font = 'normal 14px sans-serif'
     ctx.fillText(
       activeTrips[0] + ' trains',
       this.center[0] + Math.cos(-HALF_PI + startAngle + 0.035 * dataAngle) * (R + mean(activeTrips.slice(0, 10)) * 0.3),

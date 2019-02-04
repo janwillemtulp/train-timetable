@@ -13,6 +13,9 @@ const store = new Store({
   distort: true,
 
   increment: 1, 
+
+  innerHeight,
+  innerWidth,
   
   selectedStations: ['zl'],
   x: undefined,

@@ -1,155 +1,177 @@
-<div style="position: relative;">
-	{#await promise}
+<svelte:window bind:innerWidth bind:innerHeight on:resize="resize()" />
+<header>
+	<h1>On Time Every Time {$innerWidth} {$innerHeight}</h1>
+</header>
+<main>
+	<div style="position: relative;">
+		{#await promise}
 		<p style="color: white;">loading...</p>
-	{:then}
+		{:then}
 		<!-- <svg {width} {height} ref:svg>
-			<text x="200" y="200" style="fill: white;">{Math.round(Math.floor($elapsed / 60))}:{Math.round($elapsed % 60) < 10 ? '0' : ''}{Math.round($elapsed % 60)}</text>
-			<Legs {width} {height} x={data.x} y={data.y} elapsed={$elapsed} />
-			<Stations stations={data.stations} {width} {height} x={data.x} y={data.y} /> -->
-			<!-- <Trips trips={data.trips} {width} {height} x={data.x} y={data.y} elapsed={$elapsed} /> -->
+				<text x="200" y="200" style="fill: white;">{Math.round(Math.floor($elapsed / 60))}:{Math.round($elapsed % 60) < 10 ? '0' : ''}{Math.round($elapsed % 60)}</text>
+				<Legs {width} {height} x={data.x} y={data.y} elapsed={$elapsed} />
+				<Stations stations={data.stations} {width} {height} x={data.x} y={data.y} /> -->
+		<!-- <Trips trips={data.trips} {width} {height} x={data.x} y={data.y} elapsed={$elapsed} /> -->
 		<!-- </svg> -->
 		<Canvas />
-	{/await}
-	<div style="position: absolute; top: 20px; left: 20px">
-		<button on:click="toggleLabels()">toggle labels</button>
-		<button on:click="toggleDistort()">toggle distortion</button>
-		<input type="range" min="0.05" max="2" value="1" step="0.01" on:input="updateIncrement(this.value)" />
+		{/await}
+		<div style="position: absolute; top: 20px; left: 20px">
+			<button on:click="toggleLabels()">toggle labels</button>
+			<button on:click="toggleDistort()">toggle distortion</button>
+			<input type="range" min="0.05" max="2" value="1" step="0.01" on:input="updateIncrement(this.value)" />
+		</div>
 	</div>
-</div>
+</main>
 
 <style>
+	main {
+	  display: grid;
+	  width: 100%;
+		grid-template-rows: repeat(1fr, 3);
+	}
+
 	h1 {
-		color: purple;
+	  width: 100%;
+	  text-align: center;
+	  color: white;
+		text-transform: uppercase;
+		letter-spacing: 0.6rem;
+		font-size: 1.4rem;
 	}
 </style>
 
 <script>
-	import { csv } from 'd3-fetch'
-	import { extent } from 'd3-array'
-	import { scaleLinear } from 'd3-scale'
-	import store from './store.js'
-	import { select, mouse} from 'd3-selection'
-	import Victor from 'victor'
-	import Station from './domain/Station'
-	import Leg from './domain/Leg'
-	import Trip from './domain/Trip'
+	import { csv } from "d3-fetch";
+	import { extent } from "d3-array";
+	import { scaleLinear } from "d3-scale";
+	import store from "./store.js";
+	import { select, mouse } from "d3-selection";
+	import Victor from "victor";
+	import Station from "./domain/Station";
+	import Leg from "./domain/Leg";
+	import Trip from "./domain/Trip";
 
-	const dist = (from, to) => Math.sqrt(Math.pow(to[0] - from[0], 2) + Math.pow(to[1] - from[1], 2))
+	const dist = (from, to) =>
+	  Math.sqrt(Math.pow(to[0] - from[0], 2) + Math.pow(to[1] - from[1], 2));
 
 	const pathString = (from, to) => {
-		const angle = (Math.PI * 0.5) + Math.atan2(to[1] - from[1], to[0] - from[0])
-		const dst = dist(from, to)
+	  const angle = Math.PI * 0.5 + Math.atan2(to[1] - from[1], to[0] - from[0]);
+	  const dst = dist(from, to);
 
-		const cx = ((from[0] + to[0]) / 2) + (Math.cos(angle) * dst * 0.15)
-		const cy = ((from[1] + to[1]) / 2) + (Math.sin(angle) * dst * 0.15)
+	  const cx = (from[0] + to[0]) / 2 + Math.cos(angle) * dst * 0.15;
+	  const cy = (from[1] + to[1]) / 2 + Math.sin(angle) * dst * 0.15;
 
-		return `M${from[0]} ${from[1]} Q ${cx} ${cy} ${to[0]} ${to[1]}`
-	}
+	  return `M${from[0]} ${from[1]} Q ${cx} ${cy} ${to[0]} ${to[1]}`;
+	};
 
 	export default {
-		store: () => store,
-		oncreate() {
-			// from: https://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
-			var stop = false;
-			var frameCount = 0;
-			var fps, fpsInterval, startTime, now, then, elapsed;
+	  store: () => store,
+	  oncreate() {
+	    // from: https://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
+	    var stop = false;
+	    var frameCount = 0;
+	    var fps, fpsInterval, startTime, now, then, elapsed;
 
-			function startAnimating(fps) {
-					fpsInterval = 1000 / fps
-					then = Date.now()
-					startTime = then
-					animate()
-			}
+	    function startAnimating(fps) {
+	      fpsInterval = 1000 / fps;
+	      then = Date.now();
+	      startTime = then;
+	      animate();
+	    }
 
-			function animate() {
-				requestAnimationFrame(animate)
+	    function animate() {
+	      requestAnimationFrame(animate);
 
-				frameCount++
+	      frameCount++;
 
-				now = Date.now()
-				elapsed = now - then
-				// if (Math.floor(frameCount % 10 === 0)) { console.log(Math.round(elapsed))}
-				if (elapsed > fpsInterval) {
-						then = now - (elapsed % fpsInterval)
+	      now = Date.now();
+	      elapsed = now - then;
+	      // if (Math.floor(frameCount % 10 === 0)) { console.log(Math.round(elapsed))}
+	      if (elapsed > fpsInterval) {
+	        then = now - (elapsed % fpsInterval);
 
-						store.set({ elapsed: (store.get().elapsed + store.get().increment) % 1440 })
+	        store.set({
+	          elapsed: (store.get().elapsed + store.get().increment) % 1440
+	        });
+	      }
+	    }
 
-				}
-			}
-
-			startAnimating(60)
-		},
-		data: () => ({
-			width: window.innerHeight,
+	    startAnimating(60);
+	  },
+	  data: () => ({
+	    width: window.innerHeight,
 			height: window.innerHeight,
-			promise: Promise.all([
-				'./data/stations.csv',
-				'./data/legs.csv',
-				'./data/data.csv'
-			].map(d => csv(d)))
-				.then(results => {
-					const x = scaleLinear()
-						.domain(extent(results[0], d => +d.lon))
-						.range([100, window.innerHeight - 100])
+	    promise: Promise.all(
+	      ["./data/stations.csv", "./data/legs.csv", "./data/data.csv"].map(d =>
+	        csv(d)
+	      )
+	    ).then(results => {
+				// console.log(this.get())
+	      const x = scaleLinear()
+	        .domain(extent(results[0], d => +d.lon))
+	        .range([100, window.innerHeight - 100]);
 
-					const y = scaleLinear()
-						.domain(extent(results[0], d => +d.lat))
-						.range([window.innerHeight - 10, 10])
+	      const y = scaleLinear()
+	        .domain(extent(results[0], d => +d.lat))
+	        .range([window.innerHeight - 10, 10]);
 
-					const stations = results[0]
-						.filter(d => !d['full-name'].toLowerCase().includes('grens'))
-						.map(d => new Station(d, x, y))
+	      const stations = results[0]
+	        .filter(d => !d["full-name"].toLowerCase().includes("grens"))
+	        .map(d => new Station(d, x, y));
 
-					console.log([...new Set(stations.map(d => d.type))])
+	      console.log([...new Set(stations.map(d => d.type))]);
 
-					const legs = results[1].map(d => {
-						const from = stations.find(s => s.shortName === d.from)
-						const to = stations.find(s => s.shortName === d.to)
+	      const legs = results[1].map(d => {
+	        const from = stations.find(s => s.shortName === d.from);
+	        const to = stations.find(s => s.shortName === d.to);
 
-						return new Leg(d, from, to)
-					})
+	        return new Leg(d, from, to);
+	      });
 
-					const trips = []
-					results[2].forEach(d => {
-						const leg = legs[+d['leg-index']]
-						const trip = new Trip(d, leg)
-						
-						leg.trips.push(trip)
-						trips.push(trip)
-					})
-				
-					console.log(stations, legs, trips)
+	      const trips = [];
+	      results[2].forEach(d => {
+	        const leg = legs[+d["leg-index"]];
+	        const trip = new Trip(d, leg);
 
-					store.set({
-						stations,
-						legs,
-						trips,
-						x,
-						y
-					})
+	        leg.trips.push(trip);
+	        trips.push(trip);
+	      });
 
-					console.log('STORE', store.get())
+	      console.log(stations, legs, trips);
 
-					return
-			})
-		}),
-		methods: {
-			toggleLabels() {
-				this.store.set({
-					showLabels: !this.store.get().showLabels
-				})
+	      store.set({
+	        stations,
+	        legs,
+	        trips,
+	        x,
+	        y
+	      });
+
+	      console.log("STORE", store.get());
+
+	      return;
+	    })
+	  }),
+	  methods: {
+	    toggleLabels() {
+	      this.store.set({
+	        showLabels: !this.store.get().showLabels
+	      });
+	    },
+	    toggleDistort() {
+	      this.store.set({
+	        distort: !this.store.get().distort
+	      });
+	    },
+	    updateIncrement(value) {
+	      this.store.set({ increment: +value });
 			},
-			toggleDistort() {
-				this.store.set({
-					distort: !this.store.get().distort
-				})
-			},
-			updateIncrement(value) {
-				this.store.set({ increment: +value })
+			resize() {
+				console.log(this.get())
 			}
-		},
-		components: {
-			Canvas: './Canvas.svelte'
-		}
-	}
+	  },
+	  components: {
+	    Canvas: "./Canvas.svelte"
+	  }
+	};
 </script>
