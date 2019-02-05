@@ -3,7 +3,7 @@ import { range, mean } from 'd3-array'
 export default class Clock {
   constructor(store) {
     this.store = store
-    this.center = [220, 300]
+    this.center = [270, 300]
   }
 
   draw(ctx) {
@@ -13,7 +13,7 @@ export default class Clock {
     ctx.fillStyle = 'white'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
-    ctx.fillText(`${ Math.floor(this.hours) }: ${ this.minutes < 10 ? '0' : '' }${ Math.floor(this.minutes) }`, this.center[0], this.center[1] + 30)
+    ctx.fillText(`${ Math.floor(this.hours) }:${ this.minutes < 10 ? '0' : '' }${ Math.floor(this.minutes) }`, this.center[0], this.center[1] + 30)
     
     ctx.strokeStyle = 'rgba(51, 121, 204, 0.3)'
     ctx.fillStyle = 'rgba(51, 121, 204, 0.1)'
@@ -53,7 +53,7 @@ export default class Clock {
 
       if (i % 5 === 0) {
         ctx.fillStyle = Math.floor(this.hours) === 1 + (i / 5) ? 'orange' : 'rgba(51, 121, 204, 0.6)'
-        ctx.font = 'bold 14px Arial'
+        ctx.font = 'bold 14px Maven Pro'
         ctx.fillText(
           1 + (i / 5),
           this.center[0] + Math.cos((Math.PI * 2 / 12) - HALF_PI + (i / 60) * Math.PI * 2) * (R + 30),
@@ -61,7 +61,7 @@ export default class Clock {
         )
 
         ctx.fillStyle = Math.floor(this.hours) === 13 + (i / 5) || (Math.floor(this.hours) === 0 && 13 + (i / 5) === 24) ? 'orange' : 'rgba(51, 121, 204, 0.6)'
-        ctx.font = 'normal 10px Arial'
+        ctx.font = 'normal 10px Maven Pro'
         ctx.fillText(
           13 + (i / 5),
           this.center[0] + Math.cos((Math.PI * 2 / 12) - HALF_PI + (i / 60) * Math.PI * 2) * (R + 30),
@@ -84,7 +84,6 @@ export default class Clock {
         ctx.strokeStyle = 'orange'
       } else {
         ctx.strokeStyle = `rgba(51, 121, 204, ${1 - (i / activeTrips.length)})`
-        // ctx.strokeStyle = `hsl(216, 67%, ${51 - (i / activeTrips.length * 51)}%)`
       }
       ctx.beginPath()
       ctx.moveTo(
@@ -127,11 +126,19 @@ export default class Clock {
 
     ctx.fillStyle = 'orange'
     ctx.textAlign = 'center'
-    ctx.font = 'normal 14px sans-serif'
+    ctx.font = 'normal 16px Maven Pro'
     ctx.fillText(
-      activeTrips[0] + ' trains',
-      this.center[0] + Math.cos(-HALF_PI + startAngle + 0.035 * dataAngle) * (R + mean(activeTrips.slice(0, 10)) * 0.3),
-      this.center[1] + Math.sin(-HALF_PI + startAngle + 0.035 * dataAngle) * (R + mean(activeTrips.slice(0, 10)) * 0.3)
+      activeTrips[0],
+      this.center[0] + Math.cos(-HALF_PI + startAngle + 0.033 * dataAngle) * (R + mean(activeTrips.slice(0, 10)) * 0.3),
+      this.center[1] + Math.sin(-HALF_PI + startAngle + 0.033 * dataAngle) * (R + mean(activeTrips.slice(0, 10)) * 0.3)
+    )
+
+    ctx.fillStyle = 'hsla(213, 60%, 50%, 0.8)'
+    ctx.font = 'normal 18px Maven Pro'
+    ctx.fillText(
+      'active trains',
+      this.center[0],
+      this.center[1] + R + 130
     )
   }
 

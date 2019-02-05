@@ -12,7 +12,6 @@ export default class Leg {
   }
 
   get active() {
-    // return this.activeTrips.length > 0
     return this.trips.filter(d => d.active).length > 0
   }
 
@@ -60,13 +59,8 @@ export default class Leg {
 
     ctx.lineWidth = this.active ? 2 : 1
     ctx.strokeStyle = this.active ? 'rgba(51, 121, 204, 0.4)' : 'rgba(51, 121, 204, 0.3)'
-    // ctx.strokeStyle = this.active ? 'rgb(20, 34, 56)' : 'rgb(27, 48, 80)'
-    // ctx.strokeStyle = 'rgba(255, 165, 0, 0.3)'
-    // ctx.strokeStyle = 'rgba(51, 121, 204, 0.3)' // NS blue
     // ctx.strokeStyle = `hsla(200, 100%, ${30 + distanceRatio * 0.1}%, ${this.active ? 0.5 : 0.3})`
     // ctx.strokeStyle = this.active ? 'lime' : '#333'
-    // ctx.strokeStyle = 'rgba(255, 127, 0, 0.01)'
-    // ctx.globalCompositeOperation = 'screen'
     // ctx.strokeStyle = `hsla(${this.from.v.distance(this.to.v)}, 100%, 50%, 0.3)`
     ctx.setLineDash([])
     ctx.stroke(p)
@@ -79,11 +73,8 @@ export default class Leg {
     }
 
     ctx.strokeStyle = 'orange'
-    // ctx.strokeStyle = 'rgb(247, 202, 73)' // NS yellow
     ctx.lineWidth = 2
-    // ctx.setLineDash([1, 1.5])
-
-    // this.activeTrips.forEach(trip => {
+    
     this.trips.filter(d => d.active).forEach(trip => {
       // elapsed will reset to 0 after it reached 1440, so I need to account for situations where
       // departure is after arrive, for instance, departure: 1439, arrive: 8
@@ -97,10 +88,6 @@ export default class Leg {
       ctx.lineTo(back.x, back.y)
       ctx.closePath()
       ctx.stroke()
-
-      // ctx.fillStyle = `hsla(${Math.floor(trip.series / 1000) * 20}, 50%, 50%, 1)`
-      // ctx.textAlign = 'center'
-      // ctx.fillText(trip.series, front.x, front.y - 10)
     })
   }
 }

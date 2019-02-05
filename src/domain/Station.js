@@ -24,12 +24,12 @@ export default class Station {
     if (this.showLabel) {
       ctx.fillStyle = '#fff'
       ctx.textAlign = 'center'
+      ctx.font = 'normal 16px Maven Pro'
       ctx.fillText(this.fullName, this.v.x, this.v.y - 10)
     }
   }
 
   drawOffsetPosition(ctx) {
-    // ctx.save()
     ctx.fillStyle = 'rgba(255, 255, 255, 1)'
     ctx.strokeStyle = '#000'
     // ctx.shadowBlur = 10
@@ -49,20 +49,15 @@ export default class Station {
       0,
       Math.PI * 2
     )
-    // ctx.stroke()
     ctx.fill()
     ctx.closePath()
-    // ctx.restore()
   }
 
   drawOffsetLine(ctx) {
     // ctx.strokeStyle = `hsla(0, 100%, ${20 + this.o.distance(this.v)}%, 1)`
-    // ctx.strokeStyle = 'rgba(255, 255, 255, 1)'
-    // ctx.setLineDash([1, 1.5])
     // ctx.globalCompositeOperation = 'screen'
     ctx.strokeStyle = `hsla(${this.v.clone().subtract(this.o).angleDeg(this.v)}, 100%, 50%, 1)`
     // ctx.strokeStyle = `hsla(180, 100%, ${10 + this.o.distance(this.v) * 0.1}%, 1)`
-    // ctx.setLineDash([])
 
     ctx.beginPath() // does not go right yet. stations are not updated
     ctx.moveTo(this.o.x, this.o.y)
@@ -80,8 +75,6 @@ export default class Station {
     ctx.ellipse(
       this.o.x,
       this.o.y,
-      // 1,
-      // 1,
       this.type.toLowerCase().indexOf('megastation') > -1 ? 3 : this.type.toLowerCase().indexOf('knooppunt') > -1 ? 2 : 1,
       this.type.toLowerCase().indexOf('megastation') > -1 ? 3 : this.type.toLowerCase().indexOf('knooppunt') > -1 ? 2 : 1,
       0,

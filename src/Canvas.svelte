@@ -1,16 +1,22 @@
-<canvas style="width: 100%; height: 100%;" {width} {height} ref:canvas></canvas>
+<svelte:window on:resize="resize()" />
+<canvas style="width: 100%; height: 100%;" height={$HEIGHT} width=$WIDTH ref:canvas></canvas>
 
 <script>
   import Clock from './domain/Clock'
 
-  const setupCanvas = canvas => {
+  // const setupCanvas = (canvas, store) => {
+  const setupCanvas = (canvas, store) => {
     const dpr = window.devicePixelRatio || 1
-    const rect = canvas.getBoundingClientRect()
+    // const rect = canvas.getBoundingClientRect()
 
-    canvas.width = rect.width * dpr
-    canvas.height = rect.height * dpr
-  
-    const ctx = canvas.getContext('2d', { alpha: false })
+    const { WIDTH, HEIGHT } = store.get()
+
+    // canvas.width = rect.width * dpr
+    // canvas.height = rect.height * dpr
+    canvas.height = HEIGHT * dpr
+    canvas.width = WIDTH * dpr
+
+    const ctx = canvas.getContext('2d', { alpha: true }) // TODO: false should be faster?
 
     ctx.scale(dpr, dpr)
     
@@ -19,19 +25,21 @@
 
   export default {
     oncreate() {
-      const ctx = setupCanvas(this.refs.canvas)
+      const ctx = setupCanvas(this.refs.canvas, this.store)
       console.log(this.get(), this.store.get())
       
       const clock = new Clock(this.store)
 
       this.store.on('state', ({ changed, current, previous}) => {
+        
         if (changed.elapsed) {
-          const { legs, stations, elapsed, activeTrips } = this.store.get()
+          const { legs, stations, elapsed, activeTrips, WIDTH, HEIGHT } = this.store.get()
 
           const dpr = window.devicePixelRatio || 1;
-          const rect = this.refs.canvas.getBoundingClientRect()
+          // const rect = this.refs.canvas.getBoundingClientRect()
 
-          ctx.clearRect(0, 0, rect.width * dpr, rect.height * dpr)
+          ctx.clearRect(0, 0, WIDTH * dpr, HEIGHT * dpr)
+          // ctx.clearRect(0, 0, rect.width * dpr, rect.height * dpr)
           ctx.save()
             
           legs.forEach(leg => {
@@ -56,9 +64,17 @@
         }
       })
     },
-    data: () => ({
-      width: window.innerWidth,
-      height: window.innerHeight
-    })
+    methods: {
+      resize() {
+        // const dpr = window.devicePixelRatio || 1
+        // const rect = this.refs.canvas.getBoundingClientRect()
+
+        // this.refs.canvas.width = this.store.get().innerHeight * dpr
+        // this.refs.canvas.height = this.store.get().innerHeight * dpr
+        // this.refs.canvas.width = rect.width * dpr
+        // this.refs.canvas.height = rect.height * dpr
+
+      }
+    }
   }
 </script>
