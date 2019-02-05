@@ -17,7 +17,7 @@
 		<Canvas />
 		{/await}
 		<div style="position: relative; bottom: 18%; left: 20px">
-			<Switch on:switch="toggleLabels()" label="labels" />
+			<Switch on:switch="toggleLabels()" label="labels" checked={false} />
 			<Switch on:switch="toggleDistortion()" label="distortion" checked={true} />
 			<!-- <button on:click="toggleLabels()">toggle labels</button> -->
 			<!-- <button on:click="toggleDistort()">toggle distortion</button> -->
@@ -95,7 +95,6 @@
 				})
 
 				const { x, y } = store.get()
-				console.log(x.domain(), x.range(), y.domain(), y.range())
 
 	      const stations = results[0]
 	        .filter(d => !d["full-name"].toLowerCase().includes("grens"))
@@ -117,7 +116,7 @@
 	        trips.push(trip)
 	      });
 
-	      console.log(stations, legs, trips)
+	      // console.log(stations, legs, trips)
 
 	      store.set({
 	        stations,
@@ -125,7 +124,7 @@
 	        trips,
 	      })
 
-	      console.log("STORE", store.get())
+	      // console.log("STORE", store.get())
 			})
 			
 			var stop = false;

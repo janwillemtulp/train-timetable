@@ -26,7 +26,6 @@
   export default {
     oncreate() {
       const ctx = setupCanvas(this.refs.canvas, this.store)
-      console.log(this.get(), this.store.get())
       
       const clock = new Clock(this.store)
 
